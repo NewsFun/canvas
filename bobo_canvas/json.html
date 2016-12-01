@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        html, body{
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script type="text/javascript" src="./js/json.js"></script>
+    <!--<script type="text/javascript" src="./example/pixi.dev.js"></script>-->
+</head>
+<body>
+<script>
+    var assetsToLoader = ["img/spineboy.json"];
+    var loader = new PIXI.AssetLoader(assetsToLoader);
+//    var loader = new PIXI.SpineLoader(assetsToLoader[0]);
+    loader.onComplete = onAssetsLoaded;
+    loader.load();
+    var stage = new PIXI.Stage(0xFFFFFF, true);
+    var renderer = new PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.view);
+    function onAssetsLoaded() {
+        var spineBoy = new PIXI.Spine(assetsToLoader[0]);
+        spineBoy.position.x = window.innerWidth/2;
+        spineBoy.position.y = window.innerHeight;
+        spineBoy.scale.x = spineBoy.scale.y = window.innerHeight / 500;
+        spineBoy.stateData.setMixByName("walk", "jump", 0.2);
+        spineBoy.stateData.setMixByName("jump", "walk", 0.4);
+        spineBoy.state.setAnimationByName(0, "walk", true);
+        stage.addChild(spineBoy);
+        stage.click = function() {
+            spineBoy.state.setAnimationByName(0, "jump", false);
+            spineBoy.state.addAnimationByName(0, "walk", true, 0);
+        };
+
+    }
+    function animate() {
+        requestAnimFrame( animate );
+        renderer.render(stage);
+    }
+    animate();
+</script>
+</body>
+</html>
