@@ -9,9 +9,7 @@ html, body, div, span, iframe, p, a,canvas {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
-html {
-    height: 100%;
-}
+html {height: 100%;}
 body {
     height: 100%;
     background-color: #000000;
@@ -22,20 +20,14 @@ body {
     color: #7d7d7d;
     overflow: hidden;
 }
-ol, ul {
-    list-style: none;
-}
-ul li {
-    float: left;
-}
+ol, ul {list-style: none;}
+ul li {float: left;}
 a {
     cursor: pointer;
     text-decoration: none;
     color: #555;
 }
-input{
-    border: none;
-}
+input{border: none;}
 /*---------------base--------------*/
 /*layout*/
 .w1214 {
@@ -136,18 +128,10 @@ input{
 .blue1  { color: #2d567f; }
 .blue2  { color: #007abe; }
 .white  { color: #ffffff; }
-.bg-color1 {
-    background-color: #fef0bd;
-}
-.bg-color2 {
-    background-color: #f6f6f6;
-}
-.liner{
-    display: inline-block;
-}
-.ptr {
-    position: relative;
-}
+.bg-color1 {background-color: #fef0bd;}
+.bg-color2 {background-color: #f6f6f6;}
+.liner{display: inline-block;}
+.ptr {position: relative;}
 
 /*select*/
 .select {
@@ -176,15 +160,7 @@ input{
     line-height: 0;
     height: 0;
 }
-.unfix {
-    display: inline-block;
-}
-html[xmlns] .unfix {
-    display: block;
-}
-* html .unfix {
-    height: 1%;
-}
-.test{
-    background: rgba(200, 54, 54, 0.5);
-}
+.unfix {display: inline-block;}
+html[xmlns] .unfix {display: block;}
+* html .unfix {height: 1%;}
+.test{background: rgba(200, 54, 54, 0.5);}
