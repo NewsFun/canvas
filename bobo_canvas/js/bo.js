@@ -20,22 +20,26 @@
         },
         draw:function(mud){
             switch (mud.type){
-
+                case 'square':break;
+                case 'circle':break;
+                case 'image':break;
+                case 'line':break;
+                default :break;
             }
         }
     };
     var Mud = function (param){
         var self = this;
-        var init = function(){
-            initConfig(param);
-            return self.config;
-        };
         this.config = {
             name:'elf'+Num,
-            type:'square',
+            type:'image',
             width:200,
             height:200,
             position:{x:0,y:0}
+        };
+        var init = function(){
+            initConfig(param);
+            return self.config;
         };
         function initConfig(param){
             for(var i in param){

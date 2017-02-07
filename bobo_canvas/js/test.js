@@ -1,82 +1,65 @@
 var canvas = setCanvas();
 var ctx = canvas.getContext('2d');
-var W = window.innerWidth, H = window.innerHeight, DEG_TO_RAD = Math.PI/180;
-var surface = ~~(H/2), bold = 6, scale = 2, xx = ~~(W/(2*scale));
-var range = [], water = [], diff = 1000, dd = 15;
-
-function initWater(){
-    for(var i = 0;i<=W;i+=scale){
-        range.push({
-            x:i,
-            y:0/*+Math.sin(i*DEG_TO_RAD)*30*/
-        })
-    }
+var W = window.innerWidth, H = window.innerHeight, MAX = Math.max, MIN = Math.min;
+var par_array = [], old = b = new _brick(10), clock = 0, step = 1; par_array.push(b);
+function drawBrick(brick){
+    ctx.fillStyle = brick.style;
+    ctx.fillRect(brick.x, brick.y, brick.w, brick.h);
 }
-function drawLine(points){
-    ctx.strokeStyle = 'white';
-    ctx.lineWidth = bold;
-    ctx.beginPath();
-    ctx.moveTo(points[0].x, points[0].y);
-    for(var i = 1;i<points.length;i++){
-        ctx.lineTo(points[i].x, points[i].y);
-    }
-    ctx.stroke();
+function setOpacity(opacity){
+    var op = MIN(MAX(0, opacity), 10);
+    return 'rgba(255, 255, 255, '+op/10+')';
 }
-canvas.onmousedown = function(e){
-    var mx, my;
-    if(e){
-        mx = e.pageX;
-        my = e.pageY;
+function _brick(opacity){
+    this.opacity = opacity;
+    this.style = setOpacity(this.opacity);
+    this.x = 0;
+    this.y = H/2;
+    this.w = 10;
+    this.h = 40;
+}
+function createArray(){
+    par_array[0] = b;
+    while(old.opacity>step){
+        var len = par_array.length;
+        var last = par_array[len-1];
+        old = JSON.parse(JSON.stringify(last));
+        old.opacity -= step;
+        old.style = setOpacity(old.opacity);
+        par_array.push(old);
     }
-
-    if(Math.abs(surface-my)<20){
-        var i = ~~(mx/scale);
-        range[i].y = diff;
-    }
-};
+    console.log(par_array);
+}
 function update(){
-    /*
-    for(var i = 0;i<range.length;i++){
-        water[i] = code(range[i]);
+    var old = JSON.parse(JSON.stringify(b));
+    par_array.push(old);
+    console.log(par_array.length);
+    for(var i = 0;i<par_array.length;i++){
+        //console.log(par_array[i]);
+        if(par_array[i].opacity>1){
+            --par_array[i].opacity;
+            par_array[i].style = setOpacity(par_array[i].opacity);
+        }else{
+            par_array.splice(i,1);
+            console.log(par_array.length);
+        }
     }
-    */
-    diff *= 0.1;
-    range[xx] = diff;
-    for(var i=xx-1;i>0;i--) {
-        var d = xx-i;
-        if(d > dd) d=dd;
-        range[i] -= (range[i]-range[i+1])*(1-0.01*d);
-    }
-    //右侧
-    for(var i=xx+1;i<range.length;i++) {
-        var d = i-xx;
-        if(d > dd)d=dd;
-        range[i] -= (range[i]-range[i-1])*(1-0.01*d);
-    }
-
-    //更新点Y坐标
-    for(var i = 0;i < water.length;i++){
-        water[i].updateY(range[i]);
-    }
-    drawLine(water);
+    b.x++;
+    drawBrick(b);
+    render(par_array);
 }
-function code(point){
-    this.baseY = surface;
-    this.x = point.x;
-    this.y = point.y;
-    this.vy = 0;
-    this.targetY = 0;
+function render(arr){
+    var array = arr||par_array;
+    for(var i = 0;i<array.length;i++){
+        drawBrick(array[i]);
+    }
 }
-code.prototype.updateY = function(point){
-    this.targetY = point.y + this.baseY;
-    this.vy += this.targetY - this.y;
-    this.y += this.vy;
-};
+//drawBrick();
 function animate(){
     ctx.clearRect(0, 0, W, H);
     update();
+    clock++;
     requestAnimationFrame(animate);
 }
-initWater();
-update();
-//animate();
+//createArray();
+animate();
