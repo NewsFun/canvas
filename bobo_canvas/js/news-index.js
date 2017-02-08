@@ -3,89 +3,33 @@
  */
 var canvas = document.querySelector('#canvas');
 var ctx = canvas.getContext('2d');
-var W = window.innerWidth, H = window.innerHeight, MAX = Math.max, MIN = Math.min, R = Math.random;
-//var halfP={}, spNowCountResio;
+var W = window.innerWidth,
+    H = window.innerHeight,
+    R = Math.random,
+    MAX = Math.max,
+    MIN = Math.min,
+    SIN = Math.sin,
+    COS = Math.cos,
+    RAD = Math.PI/180;
+function initCanvas(){
     canvas.width = W; canvas.height = H;
     ctx.strokeStyle = 'white';
-/*
-var geometry={
-    getR:function(p1,p2){
-        //var inclination=-(p2.y-p1.y)/(p2.x-p1.x);
-        return -(p2.y-p1.y)/(p2.x-p1.x);
-    },
-    line:function(p1,inc){
-        this.prototype=Object;
-        this.a=inc;
-        this.b=p1.y-this.a*p1.x;
-        this.x=p1.x;
-        this.y=p1.y;
-    },
-
-    getCrossPoint:function(line1,line2){
-        var px,py;
-        var a1=line1.a;
-        var b1=line1.b;
-        var a2=line2.a;
-        var b2=line2.b;
-
-
-        if(a1-a2==0){
-            px=line1.x+(line2.x-line1.x)/2;
-            py=line1.y+(line2.y-line1.y)/2;
-        }else if(Math.abs(a1)==Infinity){
-
-            px=line2.x;
-            py=a2.x+b2;
-        }else if(Math.abs(a2)==Infinity){
-
-            px=line1.x;
-            py=a1.x+b1;
-        }else{
-            px=-(b1-b2)/(a1-a2);
-            py=a1*px+b1;
-        }
-
-        return {x:px,y:py}
-
-    }
-};
-
-var drawPointerLine=function(np,lp){
-    var Rresio=0;
-
-    var inclination1=1/geometry.getR(halfP,np);
-    var inclination2=1/geometry.getR(halfP,lp);
-    var line1=new geometry.line(np,inclination1);
-    var line2=new geometry.line(lp,inclination2);
-    var crossP0=geometry.getCrossPoint(line1,line2);
-    */
-/*console.log("spNowCountResio="+spNowCountResio)*//*
-
-    if(spNowCountResio>0.5){
-        this.adjustCount=(1-spNowCountResio)/0.5;
-        Rresio=Math.sin(this.adjustCount*Math.PI);
-    }
-    var adjust1=0.96;
-    this.adjust1=adjust1+Rresio*0.05;
-    var tpX=(crossP0.x-halfP.x)*this.adjust1;
-    var tpY=(crossP0.y-halfP.y)*this.adjust1;
-    var crossP={x:halfP.x+tpX,y:halfP.y+tpY}
-
-    var adjust2=1.01;
-    var npX=halfP.x+(np.x-halfP.x)*adjust2;
-    var npY=halfP.y+(np.y-halfP.y)*adjust2;
-    var lpX=halfP.x+(lp.x-halfP.x)*adjust2;
-    var lpY=halfP.y+(lp.y-halfP.y)*adjust2;
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.lineWidth=1;
-    ctx.moveTo(npX,npY);
-    ctx.quadraticCurveTo(crossP.x,crossP.y,lpX,lpY);
-    ctx.stroke();
-    ctx.restore();
-};
-*/
+    ctx.fillStyle = 'white';
+    ctx.lineWidth = 1;
+}
+function EllipseTwo(context, x, y, a, b) {
+    context.save();
+    var r = (a > b) ? a : b;
+    var ratioX = a / r;
+    var ratioY = b / r;
+    context.scale(ratioX, ratioY);
+    context.beginPath();
+    context.arc(x / ratioX, y / ratioY, r, 0, 2*Math.PI, false);
+    context.closePath();
+    context.restore();
+    //context.fill();
+    context.stroke();
+}
 
 function drawCurve(start, cross, end){
     ctx.save();
@@ -94,6 +38,17 @@ function drawCurve(start, cross, end){
     ctx.quadraticCurveTo(cross.x, cross.y, end.x, end.y);
     ctx.stroke();
     ctx.restore();
+}
+function renderPoint(array){
+    for(var i = 0;i<array.length;i++){
+        drawPoint(array[i]);
+    }
+}
+function drawPoint(point){
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.arc(point.x, point.y, 5, 0, 2*Math.PI);
+    ctx.fill();
 }
 function _point(x, y){
     this.x = x;
@@ -115,8 +70,8 @@ _movePoint.prototype = {
             this.x -= dx*this.g;
             this.y -= dy*this.g;
         }else{
-            this.x -= Math.sin(R() * 3.142);
-            this.y -= Math.sin(R() * 3.142);
+            //this.x -= SIN(R() * 3.142);
+            //this.y -= SIN(R() * 3.142);
         }
     },
     distance:function(n, details){
@@ -134,7 +89,6 @@ function createClickPoint(n){
         var x = start.x+stepX*i, y = start.y+stepY*i;
         list.push(new _movePoint(x, y));
     }
-    //console.log(list);
     return list;
 }
 function createCrossPoint(array){
@@ -142,7 +96,7 @@ function createCrossPoint(array){
     for(var i = 0;i<array.length;i++){
         var j = (i+1)%array.length;
         var x = ~~(array[i].x + array[j].x)/2;
-        list.push(new _movePoint(x, ~~(R()*H)));
+        list.push(new _movePoint(x, ~~(R()*1.5*H)));
     }
     return list;
 }
@@ -152,8 +106,37 @@ function drawLine(pointList, crossList){
         drawCurve(pointList[i], crossList[i], pointList[j]);
     }
 }
-var ps = createClickPoint(6);
-var cps = createCrossPoint(ps);
-//console.log(cps);
-//drawCurve();
-drawLine(ps, cps);
+function endPoint(x, y, r, R, rot){
+    var list_s = [], list_l = [];
+    for(var i = 0;i<5;i++){
+        list_s.push(new _point(COS((i*72-rot+54)*RAD)*R+x, -SIN((i*72-rot+54)*RAD)*R+y));
+        list_l.push(new _point(COS((i*72-rot+18)*RAD)*r+x, -SIN((i*72-rot+18)*RAD)*r+y));
+    }
+    return {
+        outerPoint:list_l,
+        innerPoint:list_s
+    }
+}
+function update(clickPoint, crossPoint, clickEnd, crossEnd){
+    for(var i = 0;i<clickPoint.length;i++){
+        clickPoint[i].moveTo(clickEnd[i]);
+        crossPoint[i].moveTo(crossEnd[i]);
+        drawPoint(clickPoint[i]);
+        //drawPoint(crossPoint[i]);
+        drawLine(clickPoint, crossPoint);
+    }
+}
+
+var click_point = createClickPoint();
+var cross_point = createCrossPoint(click_point);
+var sr = 200, lr = sr/COS(36*RAD);
+var ep = endPoint(W/2,H/2, sr, lr, 0);
+var cross_end = ep.innerPoint, click_end = ep.outerPoint;
+function animate(){
+    ctx.clearRect(0, 0, W, H);
+    update(click_point, cross_point, click_end, cross_end);
+    requestAnimationFrame(animate);
+}
+initCanvas();
+animate();
+//EllipseTwo(ctx, W/2, H/2, 200, 150);
