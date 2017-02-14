@@ -13,7 +13,7 @@ var W = window.innerWidth,
     COS = Math.cos,
     RAD = Math.PI/180;
 //var ys = randomY(5);
-var ys = [-1000,2000,100,800,500];
+var ys = [0,1000,500,-1000,2000];
 function initCanvas(){
     canvas.width = W; canvas.height = H;
     ctx.strokeStyle = 'white';
@@ -101,7 +101,7 @@ function _circlePoint(rot){
     this.center = {x:half_W, y:half_H};
     this.rot = rot;
     this.dis = 400;
-    this.a = 2;
+    this.a = 3;
     this.b = 0.2;
     //this.rad = 0;
     this.x = COS((clock-rot)*RAD)*this.dis*this.a+this.center.x;
@@ -126,10 +126,10 @@ _circlePoint.prototype = {
     },
     move:function(){
         var self = this;
-        self.x = COS((clock-self.rot)*RAD)*this.dis*this.a+this.center.x;
-        self.y = SIN((clock-self.rot)*RAD)*this.dis*this.b+this.center.y;
+        self.x = COS((clock*6-self.rot)*RAD)*this.dis*this.a+this.center.x;
+        self.y = SIN((clock*6-self.rot)*RAD)*this.dis*this.b+this.center.y;
         self.b = SIN(clock*RAD)/4;
-        if(self.a>1) self.a -= 0.02;
+        if(self.a>1) self.a *= 0.985;
     }
 };
 /*
@@ -229,10 +229,11 @@ function drawLine(pointList, crossList){
     }
 }
 function createCrossPoint(array){
-    var list = [];
+    var list = [], y = ys[0];
     for(var i = 0;i<array.length;i++){
         var j = (i+1)%array.length;
-        var x = (array[i].x + array[j].x)/2;
+        var x = (array[j].x-array[i].x)*R()+array[i].x;
+        var p = new _point(x, y);
         list.push(new _point(x, ys[i]));
     }
     return list;
@@ -255,7 +256,7 @@ function createClickPoint(n){
 function update(clickPoint){
     for(var i = 0;i<clickPoint.length;i++){
         clickPoint[i].move();
-        ys[i] -= (ys[i]-half_H)*0.04;
+        ys[i] -= (ys[i]-half_H)*0.02;
     }
     var cross = createCrossPoint(clickPoint);
     drawLine(clickPoint, cross);
@@ -275,7 +276,7 @@ function animate(){
     //renderPoint(testlist);
     update(testlist);
     clock++;
-    requestAnimationFrame(animate);
+    if(clock<100)requestAnimationFrame(animate);
 }
 initCanvas();
 animate();
