@@ -1,12 +1,12 @@
 /**
- * Created by Administrator on 2015/5/29.
+ * Created by bobo on 2015/5/29.
  */
 (function(){
     var canvas = setCanvas();
     var ctx = canvas.getContext('2d');
     ctx.globalCompositeOperation = 'lighter';
 
-    var W = canvas.width, H = canvas.height, txt = ['祝','大','家','节','日','快','乐'];
+    var W = canvas.width, H = canvas.height, txt = ['祝','大','家','新','年','快','乐']/* txt = ['亚','君','同','志','辛','苦','了']*/;
     var ba = [], bs = [], page = 0, tl = txt.length, gap = 16, gw = Math.floor(W/gap)*gap, gh = Math.floor(H/gap)*gap;
 
     /*--------------------------------------*/
@@ -206,7 +206,14 @@
         requestAnimationFrame(animate);
     };
     animate();
-
+    /*
+    var tick = setInterval(function(){
+        page ++;
+        P.getTxt(page%tl);
+        Fun.setState();
+        if(page>5) clearInterval(tick);
+    },3000);
+    */
     canvas.onclick = function(){
         page ++;
         P.getTxt(page%tl);

@@ -1,52 +1,33 @@
 /**
  * Created by bobo on 2016/12/15.
  */
-(function(global){
-    var W = global.innerWidth,
-        H = global.innerHeight,
-        MUD = {},
-        Num = 0;
-    var Bo = {
-        addElf:function(param){
-            var mud = new Mud(param);
-            MUD[mud.name] = mud;
-            Num ++;
-        },
-        removeElf:function(name){
-            delete MUD[name];
-        },
-        render:function(){
+//constructor
+var Promise = function() {
+    this.callbacks = [];
+};
 
-        },
-        draw:function(mud){
-            switch (mud.type){
-                case 'square':break;
-                case 'circle':break;
-                case 'image':break;
-                case 'line':break;
-                default :break;
-            }
+Promise.prototype = {
+    construct: Promise,
+    resolve: function(result) {
+        this.complete("resolve", result);
+    },
+
+    reject: function(result) {
+        this.complete("reject", result);
+    },
+
+    complete: function(type, result) {
+        while (this.callbacks[0]) {
+            this.callbacks.shift()[type](result);
         }
-    };
-    var Mud = function (param){
-        var self = this;
-        this.config = {
-            name:'elf'+Num,
-            type:'image',
-            width:200,
-            height:200,
-            position:{x:0,y:0}
-        };
-        var init = function(){
-            initConfig(param);
-            return self.config;
-        };
-        function initConfig(param){
-            for(var i in param){
-                self.config[i] = param[i];
-            }
-        }
-        init();
-    };
-    if(!global.Bo) global.Bo = Bo;
-})(window);
+    },
+
+    then: function(successHandler, failedHandler) {
+        this.callbacks.push({
+            resolve: successHandler,
+            reject: failedHandler
+        });
+
+        return this;
+    }
+};
