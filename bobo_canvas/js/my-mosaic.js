@@ -6,18 +6,19 @@
         canvas = document.querySelector('#dolly2');
     var ctx = canvas.getContext('2d'),
         w = img.width, h = img.height,
-        imgData = [];
+        imgData = [], Paths = {}, key = 0;
     function mosaic(){
         canvas.width = w;
         canvas.height = h;
         ctx.drawImage(img, 0, 0);
         imgData = ctx.getImageData(0, 0, w, h).data;
-        //detector('click');
+        //console.log(imgData.length);
+        detector(evnt);
         var path = new Path();
         path.Rectangle({
             origin:{x:0, y:0},
             size:{w:w,h:h},
-            monitorType:'mouseover',
+            monitorType:'click',
             monitorEvent:evnt
         });
     }
@@ -28,7 +29,7 @@
             new Path().Rectangle({
                 origin:path.origin,
                 size:{w:path.size.w/2,h:path.size.h},
-                monitorType:'mouseover',
+                monitorType:'click',
                 monitorEvent:evnt
             });
             new Path().Rectangle({
@@ -37,14 +38,14 @@
                     y:path.origin.y
                 },
                 size:{w:path.size.w/2,h:path.size.h},
-                monitorType:'mouseover',
+                monitorType:'click',
                 monitorEvent:evnt
             });
         }else{
             new Path().Rectangle({
                 origin:path.origin,
                 size:{w:path.size.w,h:path.size.h/2},
-                monitorType:'mouseover',
+                monitorType:'click',
                 monitorEvent:evnt
             });
             new Path().Rectangle({
@@ -53,11 +54,11 @@
                     y:path.center.y
                 },
                 size:{w:path.size.w,h:path.size.h/2},
-                monitorType:'mouseover',
+                monitorType:'click',
                 monitorEvent:evnt
             });
         }
-        path = null;
+        delete Paths[path.key];
     }
     function Path(){
         this.origin = {x:0,y:0};
@@ -65,6 +66,7 @@
         this.fillColor = 'rgba(255, 255, 255, 0.5)';
     }
     Path.prototype = {
+        constructor:Path,
         Rectangle:function(config){
             var self = this;
             mergeObject(self, config).setBounds();
@@ -76,7 +78,10 @@
             }
         },
         monitor:function(style, callback){
-            detector.call(this, style, callback);
+            this.key = key;
+            Paths[key] = this;
+            key+=1;
+            //detector.call(this, style, callback);
         },
         setBounds:function(){
             this.maximumx = this.origin.x+this.size.w;
@@ -104,17 +109,19 @@
             });
         }
     };
-    function detector(style, callback){
-        var self = this;
+    function detector(callback){
         var left = canvas.offsetLeft, top = canvas.offsetTop;
-        canvas.addEventListener(style, function(event){
+        canvas.addEventListener('mousemove', function(event){
             var e = event||window.event;
             var rx = e.clientX-left, ry = e.clientY-top;
-            if( rx>self.origin.x &&
-                rx<=self.maximumx &&
-                ry>self.origin.y &&
-                ry<=self.maximumy ){
-                callback&&callback(self, [rx, ry]);
+            //console.log(rx);
+            for(var i in Paths){
+                if( rx>Paths[i].origin.x &&
+                    rx<=Paths[i].maximumx &&
+                    ry>Paths[i].origin.y &&
+                    ry<=Paths[i].maximumy ){
+                    callback&&callback(Paths[i], [rx, ry]);
+                }
             }
         });
     }
