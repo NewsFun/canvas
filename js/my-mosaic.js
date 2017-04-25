@@ -2,11 +2,12 @@
  * Created by bobo on 2017/3/20.
  */
 (function(window){
-    var img = document.querySelector('#dolly1'),
-        canvas = document.querySelector('#dolly2');
-    var ctx = canvas.getContext('2d'),
-        w = img.width, h = img.height,
-        imgData = [], Paths = {}, key = 0;
+    var img = new Image(),
+        canvas = window.document.querySelector('#dolly2');
+    img.src = '../img/1.jpg';
+    var w = img.width, h = img.height,
+        ctx = canvas.getContext('2d');
+    var imgData = [], Paths = {}, key = 0;
     function mosaic(){
         canvas.width = w;
         canvas.height = h;
@@ -72,16 +73,14 @@
             mergeObject(self, config).setBounds();
             this.fillColor = this.getCenterColor();
             drawRectangle(self);
-            //this._showCenterPoint();
             if(self.monitorType){
                 self.monitor(self.monitorType, self.monitorEvent);
             }
         },
-        monitor:function(style, callback){
+        monitor:function(){
             this.key = key;
             Paths[key] = this;
             key+=1;
-            //detector.call(this, style, callback);
         },
         setBounds:function(){
             this.maximumx = this.origin.x+this.size.w;
@@ -139,5 +138,5 @@
         }
         return result;
     }
-    new mosaic();
+    img.onload = mosaic;
 })(window);
