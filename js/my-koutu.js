@@ -52,7 +52,7 @@
     function edgeDetection(ant){
         switch (ant.head){
             case 0:
-                if(edge[ant.addr]){
+                if(edge[ant.addr.toString()]){
                     ant = ant._pos(0, 1);
                 }else{
 
