@@ -13,6 +13,7 @@
             x:param.x,
             y:param.y
         };
+        this.color = getRGBA(this.addr);
         this.head = param.head||0;
     }
     Ant.prototype = {
@@ -39,33 +40,36 @@
         canvas['on'+ev] = function(event){
             var e = event||window.event;
             var rx = e.clientX-left, ry = e.clientY-top;
-            //_showCenterPoint(rx, ry);
-            //var rgba0 = getRGBA(0, 0);
-            rgba = getRGBA(rx, ry);
             react = {maxx:rx, minx:rx, maxy:ry, miny:ry};
             _ant = new Ant({x:rx, y:ry});
-            edgeDetection();
-            //var d = aberration(rgba0, rgba);
-            //console.log(rgba, d);
+            //rgba = _ant.color;
+            edgeDetection(_ant);
         }
     }
     function edgeDetection(ant){
         switch (ant.head){
             case 0:
-                if(edge[ant.addr.toString()]){
-                    ant = ant._pos(0, 1);
+                var ahead = ant._pos(1, 0);
+                var ab = aberration(ant.color, ahead.color);
+                if(ab>100){
+                    ahead = ant._pos(0, 1);
+                    ab = aberration(ant.color, ahead.color);
+                    if(ab>100){
+                        ant.head = 1;
+                    }else{
+                        ant = ahead;
+                    }
                 }else{
-
+                    ant = ahead;
                 }
+                edgeDetection(ant);
                 break;
 
         }
         var d = aberration();
     }
-    function batchDiff(array){
-        for(var i = 0; i<array.length;i++){
-            var ab = aberration();
-        }
+    function batchDiff(ant){
+        var ahead = ant._pos(0,1);
     }
     function aberration(point1, point2){
         var dr = point1.r-point2.r,
@@ -73,8 +77,8 @@
             db = point1.b-point2.b;
         return Math.sqrt(dr*dr*3+dg*dg*4+db*db*2);
     }
-    function getRGBA(x, y){
-        var index = (x+y*w)*4;
+    function getRGBA(point){
+        var index = (point.x+point.y*w)*4;
         var r = imgData[index],
             g = imgData[index+1],
             b = imgData[index+2],
