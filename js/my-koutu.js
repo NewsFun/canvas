@@ -7,7 +7,7 @@
     img.src = '../img/1.jpg';
     var w = img.width, h = img.height;
     var ctx = canvas.getContext('2d');
-    var imgData = [], rgba = {}, react = {}, edge = {}, _ant = {};
+    var imgData = [], _ts = 100, react = {}, edge = {}, _ant = {};
     function Ant(param){
         this.addr = {
             x:param.x,
@@ -47,26 +47,43 @@
         }
     }
     function edgeDetection(ant){
+        var ahead, ab;
         switch (ant.head){
-            case 0:
-                var ahead = ant._pos(1, 0);
-                var ab = aberration(ant.color, ahead.color);
-                if(ab>100){
+            case 0:/*down*/
+                ahead = ant._pos(1, 0);/*check left*/
+                ab = aberration(_ant.color, ahead.color);
+                if(ab>_ts){
                     ahead = ant._pos(0, 1);
-                    ab = aberration(ant.color, ahead.color);
-                    if(ab>100){
-                        ant.head = 1;
+                    ab = aberration(_ant.color, ahead.color);
+                    if(ab>_ts){
+                        ant.head = 2;
                     }else{
                         ant = ahead;
                     }
                 }else{
+                    ant.head = 1;
                     ant = ahead;
                 }
                 edgeDetection(ant);
                 break;
-
+            case 1:/*left*/
+                ahead = ant._pos(1, 0);/*检测左边*/
+                ab = aberration(_ant.color, ahead.color);
+                if(ab>_ts){
+                    ahead = ant._pos(0, 1);
+                    ab = aberration(_ant.color, ahead.color);
+                    if(ab>_ts){
+                        ant.head = 2;
+                    }else{
+                        ant = ahead;
+                    }
+                }else{
+                    ant.head = 1;
+                    ant = ahead;
+                }
+                edgeDetection(ant);
+                break;
         }
-        var d = aberration();
     }
     function batchDiff(ant){
         var ahead = ant._pos(0,1);
