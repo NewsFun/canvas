@@ -50,7 +50,7 @@
         var ahead, ab;
         switch (ant.head){
             case 0:/*down*/
-                ahead = ant._pos(1, 0);/*check left*/
+                ahead = ant._pos(-1, 0);/*check right*/
                 ab = aberration(_ant.color, ahead.color);
                 if(ab>_ts){
                     ahead = ant._pos(0, 1);
