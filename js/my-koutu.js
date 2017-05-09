@@ -1,13 +1,13 @@
 /**
- * Created by bobo on 2017/4/21.
+ * Created by bobo on 2017/5/9.
  */
 (function(window){
     var canvas = window.document.querySelector('#dolly');
     var img = new Image();
-    img.src = '../img/1.jpg';
+    img.src = '../img/5.jpg';
     var w = img.width, h = img.height;
     var ctx = canvas.getContext('2d');
-    var imgData = [], _ts = 40, react = {}, edge = {}, _ant = {};
+    var imgData = [], _ts = 40, edge = {}, _ant = null;
     var ahead, ab;
     function Ant(param){
         this.addr = {
@@ -28,6 +28,7 @@
             });
         }
     };
+
     function initPage(){
         canvas.width = w;
         canvas.height = h;
@@ -41,119 +42,19 @@
         canvas['on'+ev] = function(event){
             var e = event||window.event;
             var rx = e.clientX-left, ry = e.clientY-top;
-            react = {maxx:rx, minx:rx, maxy:ry, miny:ry};
             _ant = new Ant({x:rx, y:ry});
-            //rgba = _ant.color;
-            dropDown(_ant);
         }
     }
-    function dropDown(ant){
-        if(Object.keys(edge).length<1){
-            ahead = ant._pos(0, 1);
-            ab = aberration(_ant.color, ahead.color);
-            if(ab>_ts){
-                edgeDetection(ahead);
-                //_addEdge(ahead.addr);
-                //console.log(ahead);
-                drawEdge();
-            }else{
-                dropDown(ahead);
-            }
+    function touchRetouch(left){
+        ahead =  left?_ant._pos(-1, 0):_ant._pos(1, 0);
+        ab = aberration(_ant.color, ahead.color);
+        if(ab>_ts){
+            _addEdge(ahead);
         }
     }
     function _addEdge(point){
-        if(edge[point.x+','+point.y]){
-            return edge[point.x+','+point.y];
-        }else{
+        if(!edge[point.x+','+point.y]){
             edge[point.x+','+point.y] = true;
-            return false;
-        }
-    }
-    function edgeDetection(ant){
-        switch (ant.head){
-            case 0:/*down*/
-                ahead = ant._pos(-1, 0);/*check right*/
-                if(_addEdge(ahead.addr)) drawEdge();
-                ab = aberration(_ant.color, ahead.color);
-                if(ab>_ts){/*right side is not the edge*/
-                    ahead = ant._pos(0, 1);
-                    ab = aberration(_ant.color, ahead.color);
-                    if(ab>_ts){/*down side is not the edge*/
-                        ant.head = 3;/*turn right*/
-                        //edgeDetection(ant);
-                    }else{
-                        //ant = ahead;/*go ahead*/
-                        _addEdge(ahead.addr);
-                        edgeDetection(ahead);/*recursion*/
-                    }
-                }else{
-                    //ant.head = 1;
-                    //ant = ahead;
-                    ahead.head = 1;/*turn left and go ahead*/
-                    _addEdge(ahead.addr);
-                    edgeDetection(ahead);/*recursion*/
-                }
-                break;
-            case 1:/*left*/
-                ahead = ant._pos(0, -1);/*check up*/
-                if(_addEdge(ahead.addr)) drawEdge();
-                ab = aberration(_ant.color, ahead.color);
-                if(ab>_ts){
-                    ahead = ant._pos(-1, 0);
-                    ab = aberration(_ant.color, ahead.color);
-                    if(ab>_ts){
-                        ant.head = 0;/*turn down*/
-                        edgeDetection(ant);
-                    }else{
-                        _addEdge(ahead.addr);
-                        edgeDetection(ahead);
-                    }
-                }else{
-                    ahead.head = 2;/*turn up*/
-                    _addEdge(ahead.addr);
-                    edgeDetection(ahead);
-                }
-                break;
-            case 2:/*up*/
-                ahead = ant._pos(1, 0);/*check right*/
-                if(_addEdge(ahead.addr)) drawEdge();
-                ab = aberration(_ant.color, ahead.color);
-                if(ab>_ts){
-                    ahead = ant._pos(0, -1);/*check up*/
-                    ab = aberration(_ant.color, ahead.color);
-                    if(ab>_ts){
-                        ant.head = 1;/*turn left*/
-                        edgeDetection(ant);
-                    }else{
-                        _addEdge(ahead.addr);
-                        edgeDetection(ahead);
-                    }
-                }else{
-                    ahead.head = 3;/*turn right*/
-                    _addEdge(ahead.addr);
-                    edgeDetection(ahead);
-                }
-                break;
-            case 3:/*right*/
-                ahead = ant._pos(0, 1);/*check down*/
-                if(_addEdge(ahead.addr)) drawEdge();
-                ab = aberration(_ant.color, ahead.color);
-                if(ab>_ts){
-                    ahead = ant._pos(1, 0);/*check right*/
-                    ab = aberration(_ant.color, ahead.color);
-                    if(ab>_ts){
-                        ant.head = 2;/*turn up*/
-                        edgeDetection(ant);
-                    }else{
-                        _addEdge(ahead.addr);
-                        edgeDetection(ahead);
-                    }
-                }else{
-                    ahead.head = 0;/*turn down*/
-                    _addEdge(ahead.addr);
-                    edgeDetection(ahead);
-                }
-                break;
         }
     }
     function drawEdge(){
@@ -190,7 +91,7 @@
         ctx.fillStyle = path.fillColor;
         ctx.fillRect(path.origin.x, path.origin.y, path.size.w, path.size.h);
         ctx.restore();
-        return path;
+        //return path;
     }
     img.onload = initPage;
 })(window);
