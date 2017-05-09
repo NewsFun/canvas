@@ -45,11 +45,14 @@
             _ant = new Ant({x:rx, y:ry});
         }
     }
-    function touchRetouch(left){
-        ahead =  left?_ant._pos(-1, 0):_ant._pos(1, 0);
-        ab = aberration(_ant.color, ahead.color);
+    function touchRetouch(ant, left){
+        ahead =  left?ant._pos(-1, 0):ant._pos(1, 0);
+        ab = aberration(ant.color, ahead.color);
         if(ab>_ts){
             _addEdge(ahead);
+        }else{
+            ant = ahead;
+            touchRetouch(ant, left);
         }
     }
     function _addEdge(point){
