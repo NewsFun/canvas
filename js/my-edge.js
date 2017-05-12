@@ -7,7 +7,7 @@
     img.src = '../img/5.jpg';
     var w = img.width, h = img.height;
     var ctx = canvas.getContext('2d');
-    var imgData = [], _ts = 40, react = {}, edge = {}, _ant = {}, _head = null;
+    var imgData = [], _ts = 80, react = {}, edge = {}, _ant = {}, _head = null, n = 0;
     var ahead, ab;
 
     function Ant(param){
@@ -21,11 +21,15 @@
     Ant.prototype = {
         constructor:Ant,
         _pos:function(dx, dy){
-            var self = this;
+            /*
+            this.addr.x += dx;
+            this.addr.y += dy;
+            return this;
+            */
             return new Ant({
-                x:self.addr.x+dx,
-                y:self.addr.y+dy,
-                head:self.head
+                x:this.addr.x+dx,
+                y:this.addr.y+dy,
+                head:this.head
             });
         }
     };
@@ -53,10 +57,11 @@
             ahead = ant._pos(0, 1);
             ab = aberration(_ant.color, ahead.color);
             if(ab>_ts){
-                edgeDetection(ahead);
                 _head = ahead.addr;
-                _referee(_head);
-                //console.log(ahead);
+                edge[_head.x+','+_head.y] = true;
+                //_referee(_head);
+                console.log(_head);
+                edgeDetection(ahead);
                 drawEdge();
             }else{
                 dropDown(ahead);
@@ -64,24 +69,32 @@
         }
     }
     function _referee(point){
-        if(point.x === _head.x&&point.y===_head.y) return true;
+        if(point.x === _head.x&&point.y===_head.y&&n>0) return true;
         if(!edge[point.x+','+point.y]){
             edge[point.x+','+point.y] = true;
             return false;
         }
     }
     function edgeDetection(ant){
+        if(_referee(ahead.addr)){
+            console.log(n);
+            return;
+        }
+        /*if(n>5000){
+            console.log(n);
+            return;
+        }*/
+        n+=1;
         switch (ant.head){
             case 0:/*down*/
                 ahead = ant._pos(-1, 0);/*check right*/
-                if(_referee(ahead.addr)) drawEdge();
                 ab = aberration(_ant.color, ahead.color);
                 if(ab>_ts){/*right side is not the edge*/
                     ahead = ant._pos(0, 1);
                     ab = aberration(_ant.color, ahead.color);
                     if(ab>_ts){/*down side is not the edge*/
                         ant.head = 3;/*turn right*/
-                        //edgeDetection(ant);
+                        edgeDetection(ant);
                     }else{
                         /*go ahead*/
                         _referee(ahead.addr);
@@ -95,7 +108,6 @@
                 break;
             case 1:/*left*/
                 ahead = ant._pos(0, -1);/*check up*/
-                if(_referee(ahead.addr)) drawEdge();
                 ab = aberration(_ant.color, ahead.color);
                 if(ab>_ts){
                     ahead = ant._pos(-1, 0);
@@ -115,7 +127,6 @@
                 break;
             case 2:/*up*/
                 ahead = ant._pos(1, 0);/*check right*/
-                if(_referee(ahead.addr)) drawEdge();
                 ab = aberration(_ant.color, ahead.color);
                 if(ab>_ts){
                     ahead = ant._pos(0, -1);/*check up*/
@@ -135,7 +146,6 @@
                 break;
             case 3:/*right*/
                 ahead = ant._pos(0, 1);/*check down*/
-                if(_referee(ahead.addr)) drawEdge();
                 ab = aberration(_ant.color, ahead.color);
                 if(ab>_ts){
                     ahead = ant._pos(1, 0);/*check right*/

@@ -7,7 +7,7 @@
     img.src = '../img/5.jpg';
     var w = img.width, h = img.height;
     var ctx = canvas.getContext('2d');
-    var imgData = [], _ts = 40, edge = {}, _ant = null;
+    var imgData = [], _ts = 40, edge = {}, _ant = null, cl = [];
     var ahead, ab;
     function Ant(param){
         this.addr = {
@@ -45,15 +45,26 @@
             _ant = new Ant({x:rx, y:ry});
         }
     }
-    function touchRetouch(ant, left){
+    function lineScan(ant){
+        halfScan(ant);
+        halfScan(ant, true);
+        if(cl[0]){
+
+        }
+    }
+    function halfScan(ant, left){
         ahead =  left?ant._pos(-1, 0):ant._pos(1, 0);
         ab = aberration(ant.color, ahead.color);
         if(ab>_ts){
-            _addEdge(ahead);
+            cl.push(ahead.addr);
+            _addEdge(ahead.addr);
+            //return ahead;
         }else{
-            ant = ahead;
-            touchRetouch(ant, left);
+            halfScan(ahead, left);
         }
+    }
+    function scanEnd(){
+
     }
     function _addEdge(point){
         if(!edge[point.x+','+point.y]){
