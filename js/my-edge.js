@@ -33,6 +33,7 @@
         h = img.height;
         canvas.width = w;
         canvas.height = h;
+        console.log(w, h);
         ctx.drawImage(img, 0, 0);
         imgData = ctx.getImageData(0, 0, w, h).data;
         addEvent('click');
@@ -42,14 +43,8 @@
         canvas['on'+ev] = function(event){
             var e = event||window.event;
             var rx = e.clientX-left, ry = e.clientY-top;
-            //react = {maxx:rx, minx:rx, maxy:ry, miny:ry};
             _ant = new Ant({x:rx, y:ry});
-            if(!finish){
-                dropDown(_ant);
-            }else{
-                initConfig();
-            }
-
+            finish?initConfig():dropDown(_ant);
         }
     }
     function initConfig(){
@@ -59,26 +54,32 @@
         finish = false;
         dropDown(_ant);
     }
+    function edgePoint(point){
+        point.x = Math.min(point.x, w);
+        point.y = Math.min(point.y, h);
+        edge[point.x+','+point.y] = true;
+    }
     function dropDown(ant){
         if(isEdge(ant, 0, 1)){
             _head = ahead.addr;
-            edge[_head.x+','+_head.y] = true;
+            edgePoint(_head);
+            //console.log(_head);
+            //_showCenterPoint(_head.x, _head.y);
             edgeDetection(ahead);
         }else{
             dropDown(ahead);
         }
     }
     function isEdge(ant, posx, posy){
-        ahead = ant._pos(posx, posy);
+        if(ant.addr.x>=w||ant.addr.y>=h||ant.addr.x<=0||ant.addr.y<=0) return true;
+        ahead = ant._pos(posx||0, posy||0);
         ab = aberration(_ant.color, ahead.color);
-        return ab>_ts
+        return ab>_ts;
     }
     function _referee(point){/*judge finished or not*/
-        point.x = Math.min(point.x, w);
-        point.y = Math.min(point.y, h);
         if(point.x === _head.x&&point.y===_head.y&&n>0) return true;
         if(!edge[point.x+','+point.y]){
-            edge[point.x+','+point.y] = true;
+            edgePoint(point);
             return false;
         }
     }
