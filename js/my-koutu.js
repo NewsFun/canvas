@@ -52,19 +52,21 @@
 
         }
     }
+    function isEdge(ant, posx, posy){
+        if(ant.addr.x>=w||ant.addr.y>=h||ant.addr.x<=0||ant.addr.y<=0) return true;
+        ahead = ant._pos(posx||0, posy||0);
+        ab = aberration(_ant.color, ahead.color);
+        return ab>_ts;
+    }
     function halfScan(ant, left){
-        ahead =  left?ant._pos(-1, 0):ant._pos(1, 0);
-        ab = aberration(ant.color, ahead.color);
-        if(ab>_ts){
+        var edge = left?isEdge(ant, -1, 0):isEdge(ant, 1, 0);
+        if(edge){
             cl.push(ahead.addr);
             _addEdge(ahead.addr);
             //return ahead;
         }else{
             halfScan(ahead, left);
         }
-    }
-    function scanEnd(){
-
     }
     function _addEdge(point){
         if(!edge[point.x+','+point.y]){
