@@ -33,7 +33,6 @@
         h = img.height;
         canvas.width = w;
         canvas.height = h;
-        console.log(w, h);
         ctx.drawImage(img, 0, 0);
         imgData = ctx.getImageData(0, 0, w, h).data;
         addEvent('click');
@@ -63,8 +62,6 @@
         if(isEdge(ant, 0, 1)){
             _head = ahead.addr;
             edgePoint(_head);
-            //console.log(_head);
-            //_showCenterPoint(_head.x, _head.y);
             edgeDetection(ahead);
         }else{
             dropDown(ahead);
@@ -86,7 +83,7 @@
     function edgeDetection(ant){
         if(_referee(ahead.addr)){
             finish = true;
-            console.log(n);
+            //console.log(n);
             drawEdge();
             return;
         }
@@ -180,7 +177,6 @@
         ctx.fillStyle = path.fillColor;
         ctx.fillRect(path.origin.x, path.origin.y, path.size.w, path.size.h);
         ctx.restore();
-        //return path;
     }
     img.onload = initPage;
 })(window);
