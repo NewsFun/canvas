@@ -1,65 +1,140 @@
-var canvas = setCanvas();
-var ctx = canvas.getContext('2d');
-var W = window.innerWidth, H = window.innerHeight, MAX = Math.max, MIN = Math.min;
-var par_array = [], old = b = new _brick(10), clock = 0, step = 1; par_array.push(b);
-function drawBrick(brick){
-    ctx.fillStyle = brick.style;
-    ctx.fillRect(brick.x, brick.y, brick.w, brick.h);
-}
-function setOpacity(opacity){
-    var op = MIN(MAX(0, opacity), 10);
-    return 'rgba(255, 255, 255, '+op/10+')';
-}
-function _brick(opacity){
-    this.opacity = opacity;
-    this.style = setOpacity(this.opacity);
-    this.x = 0;
-    this.y = H/2;
-    this.w = 10;
-    this.h = 40;
-}
-function createArray(){
-    par_array[0] = b;
-    while(old.opacity>step){
-        var len = par_array.length;
-        var last = par_array[len-1];
-        old = JSON.parse(JSON.stringify(last));
-        old.opacity -= step;
-        old.style = setOpacity(old.opacity);
-        par_array.push(old);
+/**
+ * Created by bobo on 2017/3/20.
+ */
+(function(window){
+    var w = window.innerWidth, h = window.innerHeight;
+    var canvas = window.document.querySelector('#canvas');
+    var ctx = canvas.getContext('2d');
+    var imgData = [], Paths = {}, key = 0, type = {};
+    function mosaic(){
+        canvas.width = w;
+        canvas.height = h;
+        var path = new Path();
+        path.Rectangle({
+            origin:{x:0, y:0},
+            size:{w:w,h:h},
+            monitorType:'click',
+            monitorEvent:evnt
+        });
     }
-    console.log(par_array);
-}
-function update(){
-    var old = JSON.parse(JSON.stringify(b));
-    par_array.push(old);
-    console.log(par_array.length);
-    for(var i = 0;i<par_array.length;i++){
-        //console.log(par_array[i]);
-        if(par_array[i].opacity>1){
-            --par_array[i].opacity;
-            par_array[i].style = setOpacity(par_array[i].opacity);
+    function evnt(path, pos){
+        //console.log(path);
+        if(path.size.w<2||path.size.h<2) return;
+        if(path.size.w>path.size.h){
+            new Path().Rectangle({
+                origin:path.origin,
+                size:{w:path.size.w/2,h:path.size.h},
+                monitorType:'click',
+                monitorEvent:evnt
+            });
+            new Path().Rectangle({
+                origin:{
+                    x:path.center.x,
+                    y:path.origin.y
+                },
+                size:{w:path.size.w/2,h:path.size.h},
+                monitorType:'click',
+                monitorEvent:evnt
+            });
         }else{
-            par_array.splice(i,1);
-            console.log(par_array.length);
+            new Path().Rectangle({
+                origin:path.origin,
+                size:{w:path.size.w,h:path.size.h/2},
+                monitorType:'click',
+                monitorEvent:evnt
+            });
+            new Path().Rectangle({
+                origin:{
+                    x:path.origin.x,
+                    y:path.center.y
+                },
+                size:{w:path.size.w,h:path.size.h/2},
+                monitorType:'click',
+                monitorEvent:evnt
+            });
         }
+        delete Paths[path.key];
     }
-    b.x++;
-    drawBrick(b);
-    render(par_array);
-}
-function render(arr){
-    var array = arr||par_array;
-    for(var i = 0;i<array.length;i++){
-        drawBrick(array[i]);
+    function Path(){
+        this.origin = {x:0,y:0};
+        this.size = {w:10,h:10};
+        this.fillColor = 'rgba(255, 255, 255, 0.5)';
     }
-}
-//drawBrick();
-function animate(){
-    ctx.clearRect(0, 0, W, H);
-    update();
-    clock++;
-    requestAnimationFrame(animate);
-}
-//createArray();
-animate();
+    Path.prototype = {
+        constructor:Path,
+        Rectangle:function(config){
+            var self = this;
+            mergeObject(self, config).setBounds();
+            this.fillColor = this.getCenterColor();
+            drawRectangle(self);
+            if(self.monitorType){
+                self.monitor();
+            }
+        },
+        monitor:function(){
+            var self = this;
+            self.key = key;
+            Paths[key] = self;
+            if(self.monitorType){
+                if(!type[self.monitorType]){
+                    detector(self.monitorType);
+                    type[self.monitorType] = {};
+                }
+                type[self.monitorType][key] = self;
+            }
+            key += 1;
+        },
+        setBounds:function(){
+            this.maximumx = this.origin.x+this.size.w;
+            this.maximumy = this.origin.y+this.size.h;
+            this.center = {
+                x:Math.ceil(this.origin.x+this.size.w/2),
+                y:Math.ceil(this.origin.y+this.size.h/2)
+            };
+            return this;
+        },
+        getCenterColor:function(){
+            var x = this.center.x, y = this.center.y;
+            var num = (x+(y-1)*w)*4;
+            var r = imgData[num], g = imgData[num+1], b = imgData[num+2], a = imgData[num+3]/255;
+            //console.log(r, g, b, a);
+            return 'rgba('+r+','+g+','+b+','+a+')'
+        },
+        _showCenterPoint:function(){
+            var self = this;
+            drawRectangle({
+                fillColor:'#00ff00',
+                origin:self.center,
+                size:{w:1, h:1}
+            });
+        }
+    };
+    function detector(type){
+        var left = canvas.offsetLeft, top = canvas.offsetTop;
+        canvas.addEventListener(type, function(event){
+            var e = event||window.event;
+            var rx = e.clientX-left, ry = e.clientY-top;
+            for(var i in Paths){
+                var p = Paths[i];
+                if( rx>p.origin.x && rx<=p.maximumx && ry>p.origin.y && ry<=p.maximumy ){
+                    if(p.monitorEvent) p.monitorEvent(p, [rx, ry]);
+                }
+            }
+        });
+    }
+    function drawRectangle(path){
+        ctx.save();
+        ctx.fillStyle = path.fillColor;
+        ctx.fillRect(path.origin.x, path.origin.y, path.size.w, path.size.h);
+        ctx.restore();
+        return path;
+    }
+    function mergeObject(result, obj){
+        for(var i in obj){
+            result[i] = obj[i];
+        }
+        return result;
+    }
+
+    mosaic();
+})(window);

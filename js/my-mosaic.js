@@ -7,19 +7,18 @@
     img.src = '../img/1.jpg';
     var w = img.width, h = img.height,
         ctx = canvas.getContext('2d');
-    var imgData = [], Paths = {}, key = 0;
+    var imgData = [], Paths = {}, key = 0, type = {};
     function mosaic(){
         canvas.width = w;
         canvas.height = h;
         ctx.drawImage(img, 0, 0);
         imgData = ctx.getImageData(0, 0, w, h).data;
         //console.log(imgData.length);
-        detector(evnt);
-        var path = new Path();
-        path.Rectangle({
+        //detector(evnt);
+        new Path().Rectangle({
             origin:{x:0, y:0},
             size:{w:w,h:h},
-            monitorType:'click',
+            monitorType:'mousemove',
             monitorEvent:evnt
         });
     }
@@ -30,7 +29,7 @@
             new Path().Rectangle({
                 origin:path.origin,
                 size:{w:path.size.w/2,h:path.size.h},
-                monitorType:'click',
+                monitorType:'mousemove',
                 monitorEvent:evnt
             });
             new Path().Rectangle({
@@ -39,14 +38,14 @@
                     y:path.origin.y
                 },
                 size:{w:path.size.w/2,h:path.size.h},
-                monitorType:'click',
+                monitorType:'mousemove',
                 monitorEvent:evnt
             });
         }else{
             new Path().Rectangle({
                 origin:path.origin,
                 size:{w:path.size.w,h:path.size.h/2},
-                monitorType:'click',
+                monitorType:'mousemove',
                 monitorEvent:evnt
             });
             new Path().Rectangle({
@@ -55,7 +54,7 @@
                     y:path.center.y
                 },
                 size:{w:path.size.w,h:path.size.h/2},
-                monitorType:'click',
+                monitorType:'mousemove',
                 monitorEvent:evnt
             });
         }
@@ -71,15 +70,23 @@
         Rectangle:function(config){
             var self = this;
             mergeObject(self, config).setBounds();
-            this.fillColor = this.getCenterColor();
+            self.fillColor = this.getCenterColor();
             drawRectangle(self);
-            if(self.monitorType){
-                self.monitor(self.monitorType, self.monitorEvent);
-            }
+            if(self.monitorType) self.monitor();
+
         },
         monitor:function(){
-            this.key = key;
-            Paths[key] = this;
+            var self = this;
+            self.key = key;
+            Paths[key] = self;
+            if(self.monitorType){
+                if(!type[self.monitorType]){
+                    detector(self.monitorType);
+                    type[self.monitorType] = {};
+                }
+                type[self.monitorType][key] = self;
+            }
+
             key+=1;
         },
         setBounds:function(){
@@ -94,10 +101,9 @@
         getCenterColor:function(){
             var x = this.center.x, y = this.center.y;
             var num = (x+(y-1)*w)*4;
-            //var num = 0;
             var r = imgData[num], g = imgData[num+1], b = imgData[num+2], a = imgData[num+3]/255;
             //console.log(r, g, b, a);
-            return 'rgba('+r+','+g+','+b+','+a+')'
+            return 'rgba('+r+','+g+','+b+','+a+')';
         },
         _showCenterPoint:function(){
             var self = this;
@@ -108,18 +114,16 @@
             });
         }
     };
-    function detector(callback){
+    function detector(type){
         var left = canvas.offsetLeft, top = canvas.offsetTop;
-        canvas.addEventListener('mousemove', function(event){
+        canvas.addEventListener(type, function(event){
             var e = event||window.event;
             var rx = e.clientX-left, ry = e.clientY-top;
-            //console.log(rx);
+
             for(var i in Paths){
-                if( rx>Paths[i].origin.x &&
-                    rx<=Paths[i].maximumx &&
-                    ry>Paths[i].origin.y &&
-                    ry<=Paths[i].maximumy ){
-                    callback&&callback(Paths[i], [rx, ry]);
+                var p = Paths[i];
+                if( rx>p.origin.x && rx<=p.maximumx && ry>p.origin.y && ry<=p.maximumy ){
+                    if(p.monitorEvent) p.monitorEvent(p, [rx, ry]);
                 }
             }
         });
