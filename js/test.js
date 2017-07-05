@@ -23,13 +23,9 @@
             monitorType:'mousemove',
             monitorEvent:evnt
         });
-        //console.log(Paths);
     }
     function evnt(path, pos){
-        path.setAttr({
-            fillColor:'rgba(255,0,0,1)'
-        });
-        //console.log(path.key);
+        path.setAttr({fillColor:'rgba(255,0,0,1)'});
     }
     function Path(){
         this.origin = {x:0,y:0};
@@ -39,25 +35,23 @@
     Path.prototype = {
         constructor:Path,
         Rectangle:function(config){
-            var self = this;
-            self.setAttr(config);
-            if(self.monitorType) self.monitor();
+            this.setAttr(config);
+            if(this.monitorType) this.monitor();
         },
         setAttr:function(data){
-            mergeObject(this, data).setBounds();
-            drawRectangle(this);
+            mergeObject(this, data);
+            this.redraw();
         },
         monitor:function(){
-            var self = this;
-            self.key = key;
-            if(self.monitorType){
-                if(!Paths[self.monitorType]){
-                    detector(self.monitorType);
-                    Paths[self.monitorType] = {};
+            this.key = key;
+            if(this.monitorType){
+                if(!Paths[this.monitorType]){
+                    detector(this.monitorType);
+                    Paths[this.monitorType] = {};
                 }
-                Paths[self.monitorType][key] = self;
+                Paths[this.monitorType][key] = this;
             }else{
-                Paths[key] = self;
+                Paths[key] = this;
             }
             key += 1;
         },
@@ -78,18 +72,21 @@
             return 'rgba('+r+','+g+','+b+','+a+')';
         },
         remove:function(){
-            var self = this;
-            if(self.monitorType){
-                delete Paths[self.monitorType][self.key];
+            if(this.monitorType){
+                delete Paths[this.monitorType][this.key];
             }else{
-                delete Paths[self.key];
+                delete Paths[this.key];
             }
         },
+        redraw:function(){
+            ctx.clearRect(this.origin.x, this.origin.y, this.size.w, this.size.h);
+            this.setBounds();
+            drawRectangle(this);
+        },
         _showCenterPoint:function(){
-            var self = this;
             drawRectangle({
                 fillColor:'#00ff00',
-                origin:self.center,
+                origin:this.center,
                 size:{w:1, h:1}
             });
         }
@@ -112,7 +109,7 @@
         ctx.fillStyle = path.fillColor;
         ctx.fillRect(path.origin.x, path.origin.y, path.size.w, path.size.h);
         ctx.restore();
-        return path;
+        //return path;
     }
     function mergeObject(result, obj){
         if(!obj) return result;
