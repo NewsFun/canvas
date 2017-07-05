@@ -6,6 +6,7 @@
     var canvas = window.document.querySelector('#canvas');
     var ctx = canvas.getContext('2d');
     var imgData = [], Paths = {}, key = 0, Type = {};
+
     function mosaic(){
         canvas.width = w;
         canvas.height = h;
@@ -25,8 +26,9 @@
         });
     }
     function evnt(path, pos){
-        path.setAttr({fillColor:'rgba(255,0,0,1)'});
+        path.setAttr({fillColor:'rgba(0,255,255,1)'});
     }
+
     function Path(){
         this.origin = {x:0,y:0};
         this.size = {w:10,h:10};
@@ -71,7 +73,10 @@
             //console.log(r, g, b, a);
             return 'rgba('+r+','+g+','+b+','+a+')';
         },
-        remove:function(){
+        spin:function(){
+
+        },
+        delt:function(){
             if(this.monitorType){
                 delete Paths[this.monitorType][this.key];
             }else{
@@ -107,6 +112,7 @@
     function drawRectangle(path){
         ctx.save();
         ctx.fillStyle = path.fillColor;
+        ctx.transform(1,1,1,1,1,1);
         ctx.fillRect(path.origin.x, path.origin.y, path.size.w, path.size.h);
         ctx.restore();
         //return path;
