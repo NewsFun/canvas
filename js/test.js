@@ -112,7 +112,7 @@
     function drawRectangle(path){
         ctx.save();
         ctx.fillStyle = path.fillColor;
-        ctx.transform(1,1,1,1,1,1);
+        //ctx.transform(1,1,1,1,1,1);
         ctx.fillRect(path.origin.x, path.origin.y, path.size.w, path.size.h);
         ctx.restore();
         //return path;
@@ -124,6 +124,28 @@
         }
         return result;
     }
-
+    //var img = new Image();
+    //img.src = './img/0001.jpg';
+    function showImage(){
+        var w = img.width, h = img.height;
+        var canvas = window.document.querySelector('#canvas');
+        canvas.width = w;
+        canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        showText(ctx);
+    }
+    function showText(ctx){
+        var txt1 = '北京市大兴区北兴路(东段)2号院12号楼1-5层101 88050818';
+        var txt2 = '中国工商银行股份有限公司北京菜市口支行 0200001819200136485';
+        var x = 500;
+        ctx.save();
+        ctx.fillColor = 'black';
+        ctx.font = '500 32px 微软雅黑';
+        ctx.fillText(txt1, x, 550);
+        ctx.fillText(txt2, x, 610);
+        ctx.restore();
+    }
+    //img.onload = showImage;
     mosaic();
 })(window);
