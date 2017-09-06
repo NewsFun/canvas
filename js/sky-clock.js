@@ -18,6 +18,5 @@ window.onload = function sc(){
             rg.addColorStop(1, 'black');
             return rg;
         }
-
     };
 };

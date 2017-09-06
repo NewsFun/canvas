@@ -18,15 +18,13 @@
         this.color = getRGBA(this.addr);
         this.head = param.head||0;
     }
-    Ant.prototype = {
-        constructor:Ant,
-        _pos:function(dx, dy){
-            return new Ant({
-                x:this.addr.x+dx,
-                y:this.addr.y+dy,
-                head:this.head
-            });
-        }
+    Ant.prototype.constructor=Ant;
+    Ant.prototype._pos = function(dx, dy){
+        return new Ant({
+            x:this.addr.x+dx,
+            y:this.addr.y+dy,
+            head:this.head
+        });
     };
     function initPage(){
         w = img.width;
@@ -44,7 +42,7 @@
             var rx = e.clientX-left, ry = e.clientY-top;
             _ant = new Ant({x:rx, y:ry});
             finish?initConfig():dropDown(_ant);
-        }
+        };
     }
     function initConfig(){
         n = 0;
@@ -161,7 +159,7 @@
             g = imgData[index+1],
             b = imgData[index+2],
             a = imgData[index+3];
-        return {r:r, g:g, b:b, a:a}
+        return {r:r, g:g, b:b, a:a};
     }
     function _showCenterPoint(x, y){
         drawRectangle({

@@ -14,7 +14,7 @@ window.onload = function drawingJS(){
             mouseX = event.x + document.body.scrollLeft;
             mouseY = event.y + document.body.scrollTop;
         }
-        return {mx:mouseX,my:mouseY}
+        return {mx:mouseX,my:mouseY};
     }
     function drawStar(r, R, x, y, rot){
         rot = rot||0;

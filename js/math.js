@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2016/4/22.
  */
-    "use strict";
+"use strict";
 var canvas = setCanvas();
 var ctx = canvas.getContext('2d');
 var W = canvas.width, H = canvas.height, coord = [], num_x = 0, num_y = 0, scale = 20, edg_x = 0, edg_y = 0, ax;
@@ -43,10 +43,10 @@ function mousePos(ev){
         mouseX = ev.pageX;
         mouseY = ev.pageY;
     }else{
-        mouseX = event.x + document.body.scrollLeft;
-        mouseY = event.y + document.body.scrollTop;
+        mouseX = ev.x + document.body.scrollLeft;
+        mouseY = ev.y + document.body.scrollTop;
     }
-    return {mx:mouseX, my:mouseY}
+    return {mx:mouseX, my:mouseY};
 }
 function config(con){
     var conf = {};

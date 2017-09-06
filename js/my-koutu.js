@@ -43,7 +43,7 @@
             var e = event||window.event;
             var rx = e.clientX-left, ry = e.clientY-top;
             _ant = new Ant({x:rx, y:ry});
-        }
+        };
     }
     function lineScan(ant){
         halfScan(ant);
@@ -91,7 +91,7 @@
             g = imgData[index+1],
             b = imgData[index+2],
             a = imgData[index+3];
-        return {r:r, g:g, b:b, a:a}
+        return {r:r, g:g, b:b, a:a};
     }
     function _showCenterPoint(x, y){
         drawRectangle({

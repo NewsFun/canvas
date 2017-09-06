@@ -1,8 +1,8 @@
 /**
  * Created by Administrator on 2016/1/14.
  */
-"use strict";
 window.onload = function G(){
+    "use strict";
     var canvas = setCanvas();
     var ctx = canvas.getContext('2d');
     ctx.globalCompositeOperation = 'lighter';
@@ -152,7 +152,7 @@ window.onload = function G(){
                     x:Math.random()*W,
                     y:Math.random()*H,
                     z:Math.random()*6+4
-                }))
+                }));
             }
             return balls;
         }
@@ -182,7 +182,7 @@ window.onload = function G(){
                         x:Math.random()*W,
                         y:Math.random()*H,
                         z:Math.random()*6+4
-                    }))
+                    }));
                 }
             }
         },
@@ -191,7 +191,7 @@ window.onload = function G(){
                 bsl = bs.length,
                 sml = Math.min(bal, bsl);
             for(var s = 0;s<bal;s++){
-                s>sml ? ba[s].s = false : ba[s].s = true;
+                ba[s].s = (s<=sml);
             }
         },
         isNumber:function(n){

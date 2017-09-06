@@ -14,8 +14,8 @@ window.onload = function Firefly(){
                 mouseX = ev.pageX;
                 mouseY = ev.pageY;
             }else{
-                mouseX = event.x + document.body.scrollLeft;
-                mouseY = event.y + document.body.scrollTop;
+                mouseX = ev.x + document.body.scrollLeft;
+                mouseY = ev.y + document.body.scrollTop;
             }
             return {mx:mouseX, my:mouseY}
         }
