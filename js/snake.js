@@ -13,7 +13,8 @@
 	function setCanvas() {
 		
 	}
-	function extend() {
+	function extend(target, obj) {
+		/*
 		var len = arguments.length;
 		if(len<2) return;
 		var target = {};
@@ -22,6 +23,11 @@
 			for(var i in obj){
 				target[i] = isObject(obj[i])?extend({}, obj[i]):obj[i];
 			}
+		}
+		return target;
+		*/
+		for(var i in obj){
+			target[i] = isObject(obj[i])?extend({}, obj[i]):obj[i];
 		}
 		return target;
 	}
