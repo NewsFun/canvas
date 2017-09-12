@@ -1,14 +1,19 @@
+/**
+ * Created by bobo on 2017/9/01.
+ */
 (function (win) {
 	"use strict";
+	var R = Math.random;
+	var W = win.innerWidth;
+	var H = win.innerHeight;
+
 	var doc = win.document;
 	var canvas = doc.querySelector('canvas');
+	canvas.width = W;
+	canvas.height = H;
 	var ctx = canvas.getContext('2d');
 
 	var isObject = is('Object');
-
-	var R = Math.random;
-	var w = win.innerWidth;
-	var h = win.innerHeight;
 
 	var snake = [{x:3,y:0},{x:2,y:0},{x:1,y:0},{x:0,y:0}];
 	var direct = {x:1,y:0};
@@ -21,16 +26,16 @@
 		// console.log(R());
 	}
 	function goAhead() {
-		var fx = direct.x*step;
-		var fy = direct.y*step;
-		var buff = [];
-		extend(buff,snake);
+		var buff = extend([],snake);
 		for (var i = 1;i<buff.length;i++) {
 			snake[i] = buff[i-1];
 		}
+
+		var fx = direct.x*step;
+		var fy = direct.y*step;
 		snake[0].x+=fx;
 		snake[0].y+=fy;
-		console.log(snake);
+		// console.log(snake);
 	}
 	function point(param) {
 		var base = {
@@ -74,7 +79,28 @@
 		};
 	}
 	function controller(keycode) {
-		// body...
+		switch(keycode){
+			case 87:
+			case 38:
+				direct = {x:0,y:-1};
+				break;
+			case 68:
+			case 40:
+				direct = {x:0,y:1};
+				break;
+			case 65:
+			case 37:
+				direct = {x:-1,y:0};
+				break;
+			case 83:
+			case 39:
+				direct = {x:1,y:0};
+				break;
+			default:break;
+		}
+	}
+	function animate() {
+		requestAnimationFrame(animate);
 	}
 	goAhead();
 })(window);

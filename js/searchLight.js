@@ -79,6 +79,6 @@ window.onload = function drawingJS(){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         var mp = mousePosition(e);
         searchlight(mp.mx, mp.my);
-    }
+    };
 
 };
