@@ -26,15 +26,10 @@
 		// console.log(R());
 	}
 	function goAhead() {
-		var buff = extend([],snake);
-		for (var i = 1;i<buff.length;i++) {
-			snake[i] = buff[i-1];
-		}
-
-		var fx = direct.x*step;
-		var fy = direct.y*step;
-		snake[0].x+=fx;
-		snake[0].y+=fy;
+		var fx = snake[0].x+direct.x*step;
+		var fy = snake[0].y+direct.y*step;
+		snake.unshift({x:fx,y:fy});
+		snake.pop();
 		// console.log(snake);
 	}
 	function point(param) {
