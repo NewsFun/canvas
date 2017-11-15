@@ -7,8 +7,7 @@
 	var W = win.innerWidth;
 	var H = win.innerHeight;
 
-	var doc = win.document;
-	var canvas = doc.querySelector('canvas');
+	var canvas = document.querySelector('canvas');
 	canvas.width = W;
 	canvas.height = H;
 	var ctx = canvas.getContext('2d');
@@ -32,11 +31,14 @@
 		snake.pop();
 		// console.log(snake);
 	}
+	function render(){
+
+	}
 	function point(param) {
 		var base = {
 			x:~~(W/2),
 			y:~~(H/2),
-			c:'rgba(255,255,255,1)'
+			color:'rgba(255,255,255,1)'
 		};
 		if(param) extend(base, param);
 		return base;
@@ -49,6 +51,7 @@
 		for(var i = 1;i<snake.length;i++){
 			if(snake[i].x===point.x&&snake[i].y===point.y) return true;
 		}
+		return false;
 	}
 	function extend(target, obj) {
 		for(var i in obj){
@@ -82,7 +85,9 @@
 			default:break;
 		}
 	}
-	function animate() {
+	function animate(cb) {
+		ctx.clearRect(0,0,W,H);
+		if(cb) cb();
 		requestAnimationFrame(animate);
 	}
 	goAhead();
