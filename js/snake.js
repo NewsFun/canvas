@@ -51,18 +51,6 @@
 		}
 	}
 	function extend(target, obj) {
-		/*
-		var len = arguments.length;
-		if(len<2) return;
-		var target = {};
-		for(var a = 0;a<len;a++){
-			var obj = arguments[a];
-			for(var i in obj){
-				target[i] = isObject(obj[i])?extend({}, obj[i]):obj[i];
-			}
-		}
-		return target;
-		*/
 		for(var i in obj){
 			target[i] = isObject(obj[i])?extend({}, obj[i]):obj[i];
 		}
