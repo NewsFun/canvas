@@ -2,10 +2,13 @@
  * Created by Administrator on 2016/4/13.
  */
 window.onload = function G(){
-    var canvas = setCanvas();
+    var canvas = document.querySelector("#canvas");
     var ctx = canvas.getContext('2d');
 
-    var W = canvas.width, H = canvas.height, X = W/2, Y = H/2, r1 = 80, r2 = 100, rad = Math.PI/2, tick = 0;
+    var W = window.innerWidth, H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+    var X = W/2, Y = H/2, r1 = 80, r2 = 100, rad = Math.PI/2, tick = 0;
     function picture(rad){
         drawCircle({
             c:'rgba(255,255,255,1)',
