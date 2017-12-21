@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas匀速直线运动</title>
+</head>
+<style>
+    body{
+        background: rgb(19, 18, 18);
+    }
+</style>
+<body>
+<canvas id="canvas">你的浏览器不支持canvas，请跟换其他浏览器试一试</canvas>
+</body>
+</html>
+<script>
+    var canvas = document.getElementById('canvas');
+    var H = window.innerHeight;
+    var W = window.innerWidth;
+    canvas.height = H;
+    canvas.width = W;
+    var cxt = canvas.getContext('2d');
+    var img = new Image();
+    var stars = [];
+    var tars = [{x:100, y:200},{x:400, y:300}];
+    img.src="./img/flystar.png";
+    img.onload = function () {
+        initStars();
+        animate();
+    };
+
+    function Star(arg) {
+        this.img = img;
+        this.x = 0;
+        this.y = 0;
+        this.vx = 1;
+        this.vy = 1;
+        this.wait = 0;
+        if(arg) extend(this, arg);
+    }
+    extend(Star.prototype, {
+        delay: function (t) {
+            if(this.wait>0){
+                this.wait -= 1;
+            }else{
+                this.wait = 0;
+            }
+            return this.wait>0;
+        },
+        moveTo:function (position) {
+            var vel = this.getVelocity(position);
+            this.vx = vel[0];
+            this.vy = vel[1];
+            this.render();
+        },
+        render:function () {
+            if(!this.delay()){
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+            cxt.drawImage(this.img,this.x,this.y);
+        },
+        getVelocity: function (position) {
+            var dx = position.x - this.x;
+            var dy = position.y - this.y;
+            var d = Math.sqrt( dx*dx + dy*dy );
+            return [dx/d, dy/d];
+        }
+    });
+    function initStars() {
+        stars[0] = new Star({wait:300});
+        stars[1] = new Star({wait:60});
+        drawStars(stars);
+    }
+    function drawStars(array) {
+        for(var i = 0;i<array.length;i++){
+            array[i].moveTo(tars[i]);
+        }
+    }
+
+    function extend(target, obj) {
+        var keys = Object.keys(obj);
+        for(var i = 0;i<keys.length;i++){
+            target[keys[i]] = obj[keys[i]];
+        }
+    }
+    function run(cxt){
+        cxt.clearRect(0, 0, W, H);
+        drawStars(stars);
+    }
+    function animate() {
+        run(cxt);
+        requestAnimationFrame(animate);
+    }
+</script>
