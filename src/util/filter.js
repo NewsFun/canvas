@@ -36,10 +36,12 @@ export function fixed2(number){
   if (remainder > 0) number = number.toFixed(2)
   return number
 }
-
-export function setStage(stage){
+// 获取画布
+export function setStage(){
+  let stage = document.getElementById('canvas')
   let width = window.innerWidth;
   let height = window.innerHeight;
   stage.width = width;
   stage.height = height;
+  return stage
 }

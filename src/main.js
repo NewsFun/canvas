@@ -5,6 +5,7 @@ import App from './App'
 import Vuex from 'vuex'
 import router from './router'
 import { http } from './api/http'
+import { setStage } from '@/util/filter.js'
 
 Vue.use(Vuex)
 Vue.config.productionTip = false
@@ -17,9 +18,7 @@ const store = new Vuex.Store({
       name: '',
       company: '中化能源'
     },
-    stageHeight: window.innerHeight,
-    stageWidth: window.innerWidth,
-    stage: document.getElementById('canvas')
+    stage: setStage()
   },
   mutations: {
     increment (state) {
