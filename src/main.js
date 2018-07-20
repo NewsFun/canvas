@@ -5,7 +5,7 @@ import App from './App'
 import Vuex from 'vuex'
 import router from './router'
 import { http } from './api/http'
-import { setStage } from '@/util/filter.js'
+import { setStage } from '@/util/canvas.js'
 
 Vue.use(Vuex)
 Vue.config.productionTip = false
