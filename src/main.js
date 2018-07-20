@@ -18,9 +18,9 @@ const store = new Vuex.Store({
       name: '',
       company: '中化能源'
     },
-    token: '',
     stageHeight: window.innerHeight,
-    stageWidth: window.innerWidth
+    stageWidth: window.innerWidth,
+    stage: null
   },
   mutations: {
     increment (state) {
@@ -31,6 +31,9 @@ const store = new Vuex.Store({
     },
     setToken (state, token) {
       state.token = token
+    },
+    setStage (state, stage) {
+      state.stage = stage
     }
   }
 })
