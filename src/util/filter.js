@@ -36,3 +36,10 @@ export function fixed2(number){
   if (remainder > 0) number = number.toFixed(2)
   return number
 }
+
+export function setStage(stage){
+  let width = window.innerWidth;
+  let height = window.innerHeight;
+  stage.width = width;
+  stage.height = height;
+}

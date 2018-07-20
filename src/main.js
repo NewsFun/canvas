@@ -4,7 +4,6 @@ import Vue from 'vue'
 import App from './App'
 import Vuex from 'vuex'
 import router from './router'
-import filters from './util/index'
 import { http } from './api/http'
 
 Vue.use(Vuex)
@@ -20,7 +19,7 @@ const store = new Vuex.Store({
     },
     stageHeight: window.innerHeight,
     stageWidth: window.innerWidth,
-    stage: null
+    stage: document.getElementById('canvas')
   },
   mutations: {
     increment (state) {
@@ -41,7 +40,6 @@ new Vue({
   el: '#app',
   router,
   store,
-  filters,
   components: { App },
   template: '<App/>'
 })
