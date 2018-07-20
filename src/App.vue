@@ -1,14 +1,21 @@
 <template>
   <div id="app" class="oil">
-    <div class="right-box">
-      <router-view/>
-    </div>
+    <canvas ref="canvas"></canvas>
+    <router-view/>
   </div>
 </template>
 
 <script>
 
 export default {
+  methods:{
+    initCanvas(){
+      
+    }
+  },
+  mounted(){
+
+  }
 }
 </script>
 
