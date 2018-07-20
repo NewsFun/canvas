@@ -20,16 +20,6 @@ export function formateDate(time) {
   }
   return result;
 }
-// code转中文名
-export function code2value(code, list) {
-  let val = "";
-  list.forEach(ele => {
-    if (ele.code === code) {
-      val = ele.zhName;
-    }
-  });
-  return val;
-}
 // 保留两位小数
 export function fixed2(number){
   let remainder = number % 1

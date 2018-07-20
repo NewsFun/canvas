@@ -13,7 +13,6 @@ Vue.prototype.$http = http
 /* eslint-disable no-new */
 const store = new Vuex.Store({
   state: {
-    count: 0,
     user: {
       name: '',
       company: '中化能源'
@@ -21,9 +20,6 @@ const store = new Vuex.Store({
     stage: setStage()
   },
   mutations: {
-    increment (state) {
-      state.count++
-    },
     setUserName (state, name) {
       state.user.name = name
     },
