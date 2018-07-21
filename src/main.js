@@ -5,7 +5,6 @@ import App from './App'
 import Vuex from 'vuex'
 import router from './router'
 import { http } from './api/http'
-import { setStage } from '@/util/canvas.js'
 
 Vue.use(Vuex)
 Vue.config.productionTip = false
@@ -16,18 +15,11 @@ const store = new Vuex.Store({
     user: {
       name: '',
       company: '中化能源'
-    },
-    stage: setStage()
+    }
   },
   mutations: {
     setUserName (state, name) {
       state.user.name = name
-    },
-    setToken (state, token) {
-      state.token = token
-    },
-    setStage (state, stage) {
-      state.stage = stage
     }
   }
 })
