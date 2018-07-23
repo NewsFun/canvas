@@ -12,10 +12,12 @@ let fontList = [];
 function Sprite(x, y) {
   this.x = x;
   this.y = y;
+  this.over = false;
   this.opacity = 1;
   this.text = randomLetter();
   this.reduce = function() {
     this.opacity -= 0.01;
+    this.over = this.opacity <= 0;
     return this;
   };
   this.render = function() {
@@ -25,51 +27,49 @@ function Sprite(x, y) {
     ctx.restore();
   };
 }
-// 场景
+
 function List() {
   this.end = false;
   this.spriteList = [];
   this.x = randomInteger(0, W);
-  this.length = randomInteger(3, 60);
+  this.length = randomInteger(8, 60);
 
   this.start = function() {
-    this.iterator().draw();
+    this.addSprite().draw();
   };
-  this.iterator = function() {
+  this.addSprite = function() {
     if (this.spriteList.length < this.length) {
       let len = this.spriteList.length;
       let ly = len * 20;
       this.spriteList.push(new Sprite(this.x, ly));
-    } else {
-      this.end = true;
     }
     return this;
   };
   this.draw = function() {
-    for (let i = 0; i < this.spriteList.length; i++) {
-      let sprite = this.spriteList[i];
+    this.spriteList.forEach(sprite => {
       sprite.reduce().render();
-    }
+    });
+    let last = [...this.spriteList].pop();
+    this.end = last.over;
   };
 }
-
+// 场景
 function Scene() {
   this.lists = [];
   this.start = function() {
-    if (this.lists.length < 100) {
+    if (this.lists.length < 80) {
       this.lists.push(new List());
     }
     this.loop();
   };
   this.loop = function() {
-    for (let i = 0; i < this.lists.length; i++) {
-      let list = this.lists[i];
+    this.lists.forEach((list, i) => {
       if (list.end) {
         this.lists.splice(i, 1);
       } else {
         list.start();
       }
-    }
+    });
   };
 }
 const scene = new Scene();
