@@ -9,13 +9,14 @@ const H = stage.stageHeight;
 
 let fontList = [];
 // 精灵
-function Sprite() {
-  this.x = randomInteger(0, W);
-  this.y = randomInteger(0, H);
+function Sprite(x, y) {
+  this.x = x;
+  this.y = y;
   this.opacity = 1;
   this.text = randomLetter();
   this.reduce = function() {
     this.opacity -= 0.01;
+    return this;
   };
   this.render = function() {
     ctx.save();
@@ -25,29 +26,49 @@ function Sprite() {
   };
 }
 // 场景
-function Scene() {
+function List() {
+  this.end = false;
   this.spriteList = [];
+  this.x = randomInteger(0, W);
+  this.length = randomInteger(3, 60);
+
   this.start = function() {
-    if (this.spriteList.length < 200) {
-      this.spriteList.push(new Sprite());
-    }
     this.iterator().draw();
   };
   this.iterator = function() {
-    for (var i = 0; i < this.spriteList.length; i++) {
-      let sprite = this.spriteList[i];
-      if (sprite.opacity < 0) {
-        this.spriteList.splice(i, 1);
-      } else {
-        sprite.reduce();
-      }
+    if (this.spriteList.length < this.length) {
+      let len = this.spriteList.length;
+      let ly = len * 20;
+      this.spriteList.push(new Sprite(this.x, ly));
+    } else {
+      this.end = true;
     }
     return this;
   };
   this.draw = function() {
-    for (var i = 0; i < this.spriteList.length; i++) {
+    for (let i = 0; i < this.spriteList.length; i++) {
       let sprite = this.spriteList[i];
-      sprite.render();
+      sprite.reduce().render();
+    }
+  };
+}
+
+function Scene() {
+  this.lists = [];
+  this.start = function() {
+    if (this.lists.length < 100) {
+      this.lists.push(new List());
+    }
+    this.loop();
+  };
+  this.loop = function() {
+    for (let i = 0; i < this.lists.length; i++) {
+      let list = this.lists[i];
+      if (list.end) {
+        this.lists.splice(i, 1);
+      } else {
+        list.start();
+      }
     }
   };
 }
