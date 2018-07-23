@@ -27,12 +27,12 @@ function Sprite(x, y) {
     ctx.restore();
   };
 }
-
+// 组
 function List() {
   this.end = false;
   this.spriteList = [];
   this.x = randomInteger(0, W);
-  this.length = randomInteger(8, 60);
+  this.length = randomInteger(8, 50);
 
   this.start = function() {
     this.addSprite().draw();
