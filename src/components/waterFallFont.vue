@@ -3,7 +3,7 @@
 import stage from "@/util/stage.js";
 import { randomInteger, randomLetter } from "@/util/canvas.js";
 
-const ctx = stage.ctx;
+const ctx = stage.context;
 const W = stage.stageWidth;
 const H = stage.stageHeight;
 

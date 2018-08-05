@@ -11,9 +11,9 @@ export function http(url, data, type) {
     config.params = data
   } else {
     config.data = data
-    // config.headers = {
-    //   'content-Type': 'application/json; charset=UTF-8'
-    // }
+    config.headers = {
+      'content-Type': 'application/json; charset=UTF-8'
+    }
   }
   return Axios(config);
 }
