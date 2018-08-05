@@ -9,18 +9,20 @@ const H = stage.stageHeight;
 
 let fontList = [];
 // 精灵
-function Sprite(x, y) {
-  this.x = x;
-  this.y = y;
-  this.over = false;
-  this.opacity = 1;
-  this.text = randomLetter();
-  this.reduce = function() {
+class Sprite {
+  constructor(x, y){
+    this.x = x;
+    this.y = y;
+    this.over = false;
+    this.opacity = 1;
+    this.text = randomLetter();
+  }
+  reduce() {
     this.opacity -= 0.01;
     this.over = this.opacity <= 0;
     return this;
   };
-  this.render = function() {
+  render() {
     ctx.save();
     ctx.fillStyle = `rgba(0, 255, 0, ${this.opacity})`;
     ctx.fillText(this.text, this.x, this.y);
@@ -28,16 +30,17 @@ function Sprite(x, y) {
   };
 }
 // 组
-function List() {
-  this.end = false;
-  this.spriteList = [];
-  this.x = randomInteger(0, W);
-  this.length = randomInteger(8, 50);
-
-  this.start = function() {
+class List {
+  constructor(){
+    this.end = false;
+    this.spriteList = [];
+    this.x = randomInteger(0, W);
+    this.length = randomInteger(8, 50);
+  }
+  start() {
     this.addSprite().draw();
   };
-  this.addSprite = function() {
+  addSprite() {
     if (this.spriteList.length < this.length) {
       let len = this.spriteList.length;
       let ly = len * 20;
@@ -45,7 +48,7 @@ function List() {
     }
     return this;
   };
-  this.draw = function() {
+  draw() {
     this.spriteList.forEach(sprite => {
       sprite.reduce().render();
     });
@@ -54,15 +57,17 @@ function List() {
   };
 }
 // 场景
-function Scene() {
-  this.lists = [];
-  this.start = function() {
+class Scene {
+  constructor(){
+    this.lists = [];
+  }
+  start() {
     if (this.lists.length < 80) {
       this.lists.push(new List());
     }
     this.loop();
   };
-  this.loop = function() {
+  loop() {
     this.lists.forEach((list, i) => {
       if (list.end) {
         this.lists.splice(i, 1);
