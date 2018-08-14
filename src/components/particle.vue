@@ -1,12 +1,9 @@
 <template></template>
 <script>
-import Stage from "@/util/stage.js";
+import {Stage, ctx, W, H} from "@/util/stage.js";
 import { randomColor } from "@/util/canvas.js";
 
 const R = Math.random;
-const ctx = Stage.context;
-const W = Stage.stageWidth;
-const H = Stage.stageHeight;
 const txt = ["祝", "大", "家", "节", "日", "快", "乐"];
 
 let ba = [],
@@ -206,7 +203,7 @@ function animate() {
   Fun.towards();
   requestAnimationFrame(animate);
 }
-Stage.stage.onclick = function() {
+Stage.onclick = function() {
   page++;
   P.getTxt(page % tl);
   Fun.setState();

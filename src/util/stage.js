@@ -1,13 +1,7 @@
-let stage = document.getElementById('canvas')
-let context = stage.getContext('2d')
-let width = window.innerWidth
-let height = window.innerHeight
-stage.width = width
-stage.height = height
+export let Stage = document.getElementById('canvas')
+export let ctx = Stage.getContext('2d')
+export let W = window.innerWidth
+export let H = window.innerHeight
 
-export default {
-  stage,
-  context,
-  stageWidth: width,
-  stageHeight: height
-}
+Stage.width = W
+Stage.height = H

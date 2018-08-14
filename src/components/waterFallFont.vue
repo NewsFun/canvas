@@ -1,11 +1,7 @@
 <template></template>
 <script>
-import stage from "@/util/stage.js";
+import {Stage, ctx, W, H} from "@/util/stage.js";
 import { randomInteger, randomLetter } from "@/util/canvas.js";
-
-const ctx = stage.context;
-const W = stage.stageWidth;
-const H = stage.stageHeight;
 
 let fontList = [];
 // 精灵
