@@ -1,7 +1,7 @@
 <template></template>
 <script>
-import {Stage, ctx, W, H} from "@/util/stage.js";
-import { randomColor } from "@/util/canvas.js";
+import { Stage, ctx, W, H } from "@/util/stage.js";
+import { randomColor } from "@/util/tools.js";
 
 const R = Math.random;
 const txt = ["祝", "大", "家", "节", "日", "快", "乐"];

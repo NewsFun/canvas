@@ -1,7 +1,7 @@
 <template></template>
 <script>
-import {Stage, ctx, W, H} from "@/util/stage.js";
-import { randomInteger, randomLetter } from "@/util/canvas.js";
+import { Stage, ctx, W, H } from "@/util/stage.js";
+import { randomInteger, randomLetter } from "@/util/tools.js";
 
 let fontList = [];
 // 精灵
