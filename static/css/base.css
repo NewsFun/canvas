@@ -1,33 +1,95 @@
 /*-----------------------reset--------------------------*/
-html, body {
-    height: 100%;
-    width: 100%;
-    padding: 0;
-    margin: 0;
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
 }
-body{
-    background-color: #000000;
-    font-family: "微软雅黑", Tahoma, Helvetica, Arial, sans-serif;
-    overflow: hidden;
+
+body {
+  background-color: #000000;
+  font-family: "微软雅黑", Tahoma, Helvetica, Arial, sans-serif;
+  overflow: hidden;
 }
+
 /*---------------base--------------*/
 
 /*color*/
-.red1   { color: #b92535; }
-.red2   { color: #da0000; }
-.red3   { color: #e50000; }
-.red4   { color: #ff1600; }
-.red5   { color: #f80303; }
-.black  { color: #000000; }
-.grey   { color: #5c5c5c; }
-.grey1  { color: #424242; }
-.yellow { color: #ed6c00; }
-.yellow1{ color: #ed6d1f; }
-.yellow2{ color: #ec6c1f; }
-.yellow3{ color: #ff8200; }
-.blue   { color: #007abe; }
-.blue1  { color: #2d567f; }
-.blue2  { color: #007abe; }
-.white  { color: #ffffff; }
-.bg-color1 {background-color: #fef0bd;}
-.bg-color2 {background-color: #f6f6f6;}
+
+.red1 {
+  color: #b92535;
+}
+
+.red2 {
+  color: #da0000;
+}
+
+.red3 {
+  color: #e50000;
+}
+
+.red4 {
+  color: #ff1600;
+}
+
+.red5 {
+  color: #f80303;
+}
+
+.black {
+  color: #000000;
+}
+
+.grey {
+  color: #5c5c5c;
+}
+
+.grey1 {
+  color: #424242;
+}
+
+.yellow {
+  color: #ed6c00;
+}
+
+.yellow1 {
+  color: #ed6d1f;
+}
+
+.yellow2 {
+  color: #ec6c1f;
+}
+
+.yellow3 {
+  color: #ff8200;
+}
+
+.blue {
+  color: #007abe;
+}
+
+.blue1 {
+  color: #2d567f;
+}
+
+.blue2 {
+  color: #007abe;
+}
+
+.white {
+  color: #ffffff;
+}
+
+.bg-color1 {
+  background-color: #fef0bd;
+}
+
+.bg-color2 {
+  background-color: #f6f6f6;
+}
+
+#cache {
+  display: none;
+}
