@@ -1,6 +1,6 @@
 <template></template>
 <script>
-import { Stage, ctx, W, H } from "@/util/stage.js";
+import { Stage, ctx, W, H } from '@/util/stage.js';
 
 const Bottom = H - 32;
 
@@ -35,7 +35,7 @@ class Drop {
     return this;
   }
   render() {
-    ctx.fillStyle = "#FFF";
+    ctx.fillStyle = '#FFF';
     ctx.beginPath();
     ctx.fillRect(this.x, this.y, this.w, this.l);
     ctx.closePath();
@@ -69,7 +69,7 @@ const scene = new Scene();
 function animate() {
   ctx.clearRect(0, 0, W, H);
   scene.start();
-  requestAnimationFrame(animate); /*浏览器固有定时器，其频率与自身刷新频率相同*/
+  requestAnimationFrame(animate); /* 浏览器固有定时器，其频率与自身刷新频率相同 */
 }
 export default {
   mounted() {

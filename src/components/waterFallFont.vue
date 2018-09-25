@@ -1,7 +1,7 @@
 <template></template>
 <script>
-import { Stage, ctx, W, H } from "@/util/stage.js";
-import { randomInteger, randomLetter } from "@/util/tools.js";
+import { Stage, ctx, W, H } from '@/util/stage.js';
+import { randomInteger, randomLetter } from '@/util/tools.js';
 
 let fontList = [];
 // 精灵
@@ -82,7 +82,7 @@ function animate() {
 }
 export default {
   mounted() {
-    ctx.font = "20px 微软雅黑";
+    ctx.font = '20px 微软雅黑';
     animate();
   }
 };

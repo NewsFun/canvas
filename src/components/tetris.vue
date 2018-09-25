@@ -1,6 +1,6 @@
 <template></template>
 <script>
-import { Stage, ctx, W, H } from "@/util/stage.js";
+import { Stage, ctx, W, H } from '@/util/stage.js';
 
 // 动画
 function animate() {

@@ -1,10 +1,10 @@
 <template></template>
 <script>
-import { Stage, ctx, W, H } from "@/util/stage.js";
-import { randomColor } from "@/util/tools.js";
+import { Stage, ctx, W, H } from '@/util/stage.js';
+import { randomColor } from '@/util/tools.js';
 
 const R = Math.random;
-const txt = ["祝", "大", "家", "节", "日", "快", "乐"];
+const txt = ['祝', '大', '家', '节', '日', '快', '乐'];
 
 let ba = [],
   bs = [],
@@ -14,7 +14,7 @@ let ba = [],
   gw = Math.floor(W / gap) * gap,
   gh = Math.floor(H / gap) * gap;
 
-ctx.globalCompositeOperation = "lighter";
+ctx.globalCompositeOperation = 'lighter';
 
 class Dot {
   constructor(arg) {
@@ -94,14 +94,14 @@ const P = {
       H / size * (Fun.isNumber(l) ? 1 : 0.45) * size
     );
     ctx.font =
-      "bold " +
+      'bold ' +
       Math.floor(s / 10) * 10 +
-      "px Avenir, Helvetica Neue, Helvetica, Arial, sans-serif";
+      'px Avenir, Helvetica Neue, Helvetica, Arial, sans-serif';
   },
   fillTxt(txt) {
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = "white";
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'white';
     this.setFont(txt);
     ctx.fillText(txt, W / 2, H / 2);
   },
