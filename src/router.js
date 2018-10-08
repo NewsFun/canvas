@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import WaterFallFont from '@/components/waterFallFont'
 import Particle from '@/components/particle'
+import Random from '@/components/random'
 import Rain from '@/components/rain'
 
 Vue.use(Router)
@@ -19,5 +20,9 @@ export default new Router({
     path: '/rain',
     name: 'rain',
     component: Rain
+  }, {
+    path: '/random',
+    name: 'random',
+    component: Random
   }]
 })
