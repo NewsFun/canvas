@@ -1,27 +1,59 @@
-<template></template>
+<template>
+  <canvas ref="canvas"></canvas>
+</template>
 <script>
+import { W, H } from "@/util/stage.js";
 import { Dot } from "@/util/spirit.js";
-let list = [];
-function createDot() {
-  for (let i = 0; i < 1000; i++) {
-    list.push(
-      new Dot({
-        x: Math.random() * 100,
-        y: 100
-      })
-    );
-  }
-}
 
-function render(){
-  for(let i in list) {
-    i.render();
-  }
-}
+let list = [];
+let count = {};
 
 export default {
+  computed: {
+    Stage() {
+      let stage = this.$refs["canvas"];
+      stage.width = W;
+      stage.height = H;
+      return stage;
+    },
+    ctx() {
+      return this.Stage.getContext("2d");
+    }
+  },
   mounted() {
-    render();
+    this.createDot().countingStar().render();
+  },
+  methods: {
+    createDot() {
+      for (let i = 0; i < 100000; i++) {
+        let ax = Math.random() * W;
+        ax = Math.round(ax);
+        list.push(ax);
+      }
+      return this;
+    },
+    countingStar() {
+      list.forEach(e => {
+        if (count[e]) {
+          count[e] += 1;
+        } else {
+          count[e] = 1;
+        }
+      });
+      return this;
+    },
+    render() {
+      for(let i in count) {
+        let dot = new Dot({
+            x: i,
+            y: count[i]*2,
+            r: 1,
+            c: "#fff",
+            ctx: this.ctx
+          });
+        dot.render();
+      }
+    }
   }
 };
 </script>

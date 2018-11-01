@@ -1,9 +1,8 @@
 /* eslint-disable */
-import { ctx } from '@/util/stage';
 const config = {
   c: '#fff',
-  x: 0,
-  y: 0,
+  x: 4,
+  y: 4,
   r: 4,
   vx: 0,
   vy: 0
@@ -16,8 +15,10 @@ export class Dot {
     this.c = params.c;
     this.vx = params.vx;
     this.vy = params.vy;
+    this.ctx = params.ctx;
   }
   render() {
+    let ctx = this.ctx;
     ctx.fillStyle = this.c;
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2, true);

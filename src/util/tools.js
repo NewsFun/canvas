@@ -25,7 +25,7 @@ export function formateDate(time) {
 export function fixed2(number) {
   let remainder = number % 1
   if (remainder > 0) number = number.toFixed(2)
-  return number
+  return number;
 }
 // 随机整数
 export function randomInteger(min, max) {
@@ -48,4 +48,8 @@ export function randomColor() {
 // 设置颜色
 export function setColor(r, g, b, a) {
   return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+}
+// 
+export function isNumber(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
 }
