@@ -16,7 +16,6 @@ export class Dot {
     this.c = params.c;
     this.vx = params.vx;
     this.vy = params.vy;
-    this.ctx = params.ctx;
     this.type = 'arc';
   }
   // render() {

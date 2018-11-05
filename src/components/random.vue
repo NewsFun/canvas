@@ -4,6 +4,7 @@
 <script>
 import { W, H } from "@/util/stage.js";
 import { Dot } from "@/util/spirit.js";
+import { render } from "@/util/render.js";
 
 let list = [];
 let count = {};
@@ -48,10 +49,9 @@ export default {
             x: i,
             y: count[i]*2,
             r: 1,
-            c: "#fff",
-            ctx: this.ctx
+            c: "#fff"
           });
-        dot.render();
+        render(this.ctx, dot);
       }
     }
   }
