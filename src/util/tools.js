@@ -49,7 +49,7 @@ export function randomColor() {
 export function setColor(r, g, b, a) {
   return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
 }
-// 
+// 判断数字
 export function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }

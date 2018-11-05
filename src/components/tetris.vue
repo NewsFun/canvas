@@ -1,16 +1,33 @@
-<template></template>
+<template>
+  <canvas class="mg-center" ref="canvas"></canvas>
+</template>
 <script>
-import { Stage, ctx, W, H } from '@/util/stage.js';
+import { cacheCtx } from "@/util/stage.js";
 
-// 动画
-function animate() {
-  ctx.clearRect(0, 0, W, H);
-  requestAnimationFrame(animate);
-}
+const W = 450;
+const H = 800;
+
 export default {
+  computed: {
+    Stage() {
+      let stage = this.$refs["canvas"];
+      stage.width = W;
+      stage.height = H;
+      return stage;
+    },
+    ctx() {
+      return this.Stage.getContext("2d");
+    }
+  },
   mounted() {
-    animate();
+    this.animate();
+  },
+  methods: {
+    animate() {
+      this.ctx.clearRect(0, 0, W, H);
+      requestAnimationFrame(this.animate);
+    }
   }
-}
+};
 </script>
 

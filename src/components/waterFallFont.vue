@@ -1,12 +1,14 @@
-<template></template>
+<template>
+  <canvas ref="canvas"></canvas>
+</template>
 <script>
-import { Stage, ctx, W, H } from '@/util/stage.js';
-import { randomInteger, randomLetter } from '@/util/tools.js';
+import { W, H } from "@/util/stage.js";
+import { randomInteger, randomLetter } from "@/util/tools.js";
 
 let fontList = [];
 // 精灵
 class Sprite {
-  constructor(x, y){
+  constructor(x, y) {
     this.x = x;
     this.y = y;
     this.over = false;
@@ -17,25 +19,26 @@ class Sprite {
     this.opacity -= 0.01;
     this.over = this.opacity <= 0;
     return this;
-  };
-  render() {
+  }
+  render(ctx) {
     ctx.save();
     ctx.fillStyle = `rgba(0, 255, 0, ${this.opacity})`;
     ctx.fillText(this.text, this.x, this.y);
     ctx.restore();
-  };
+  }
 }
 // 组
 class List {
-  constructor(){
+  constructor(ctx) {
     this.end = false;
     this.spriteList = [];
     this.x = randomInteger(0, W);
     this.length = randomInteger(8, 50);
+    this.ctx = ctx;
   }
   start() {
     this.addSprite().draw();
-  };
+  }
   addSprite() {
     if (this.spriteList.length < this.length) {
       let len = this.spriteList.length;
@@ -43,26 +46,28 @@ class List {
       this.spriteList.push(new Sprite(this.x, ly));
     }
     return this;
-  };
+  }
   draw() {
+    let ctx = this.ctx;
     this.spriteList.forEach(sprite => {
-      sprite.reduce().render();
+      sprite.reduce().render(ctx);
     });
     let last = [...this.spriteList].pop();
     this.end = last.over;
-  };
+  }
 }
 // 场景
 class Scene {
-  constructor(){
+  constructor(ctx) {
     this.lists = [];
+    this.ctx = ctx;
   }
   start() {
     if (this.lists.length < 80) {
-      this.lists.push(new List());
+      this.lists.push(new List(this.ctx));
     }
     this.loop();
-  };
+  }
   loop() {
     this.lists.forEach((list, i) => {
       if (list.end) {
@@ -71,19 +76,36 @@ class Scene {
         list.start();
       }
     });
-  };
+  }
 }
-const scene = new Scene();
-// 动画
-function animate() {
-  ctx.clearRect(0, 0, W, H);
-  scene.start();
-  requestAnimationFrame(animate);
-}
+
 export default {
+  computed: {
+    Stage() {
+      let stage = this.$refs["canvas"];
+      stage.width = W;
+      stage.height = H;
+      return stage;
+    },
+    ctx() {
+      return this.Stage.getContext("2d");
+    },
+    scene() {
+      return new Scene(this.ctx);
+    }
+  },
   mounted() {
-    ctx.font = '20px 微软雅黑';
-    animate();
+    this.ctx.font = "20px 微软雅黑";
+    this.animate();
+  },
+  methods: {
+    animate() {
+      let ctx = this.ctx;
+      let scene = this.scene;
+      ctx.clearRect(0, 0, W, H);
+      scene.start();
+      requestAnimationFrame(this.animate);
+    }
   }
 };
 </script>

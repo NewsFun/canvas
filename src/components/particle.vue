@@ -225,9 +225,6 @@ export default {
         s < sml ? (ba[s].s = true) : (ba[s].s = false);
       }
     }
-    // isNumber(n) {
-    //   return !isNaN(parseFloat(n)) && isFinite(n);
-    // }
   }
 };
 </script>

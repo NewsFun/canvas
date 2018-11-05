@@ -1,17 +1,20 @@
-<template></template>
+<template>
+  <canvas ref="canvas"></canvas>
+</template>
 <script>
-import { Stage, ctx, W, H } from '@/util/stage.js';
+import { W, H } from "@/util/stage.js";
 
 const Bottom = H - 32;
 
 class Drop {
-  constructor() {
+  constructor(ctx) {
     this.x = ~~(Math.random() * W);
     this.y = 0;
     this.v = 0;
     this.w = 1;
     this.l = 16;
     this.end = false;
+    this.ctx = ctx;
   }
   isBottom() {
     let by = this.l + this.y;
@@ -35,7 +38,8 @@ class Drop {
     return this;
   }
   render() {
-    ctx.fillStyle = '#FFF';
+    let ctx = this.ctx;
+    ctx.fillStyle = "#FFF";
     ctx.beginPath();
     ctx.fillRect(this.x, this.y, this.w, this.l);
     ctx.closePath();
@@ -44,36 +48,55 @@ class Drop {
 }
 
 class Scene {
-  constructor() {
+  constructor(ctx) {
     this.lists = [];
+    this.ctx = ctx;
   }
   start() {
     if (this.lists.length < 120) {
-      this.lists.push(new Drop());
+      this.lists.push(new Drop(this.ctx));
     }
     this.loop();
   }
   loop() {
-    this.lists.forEach((list, i) => {
-      if (list.end) {
+    this.lists.forEach((item, i) => {
+      if (item.end) {
         this.lists.splice(i, 1);
       } else {
-        list.update().render();
+        item.update().render();
       }
     });
   }
 }
 
-const scene = new Scene();
-
-function animate() {
-  ctx.clearRect(0, 0, W, H);
-  scene.start();
-  requestAnimationFrame(animate); /* 浏览器固有定时器，其频率与自身刷新频率相同 */
-}
 export default {
+  computed: {
+    Stage() {
+      let stage = this.$refs["canvas"];
+      stage.width = W;
+      stage.height = H;
+      return stage;
+    },
+    ctx() {
+      return this.Stage.getContext("2d");
+    },
+    scene() {
+      return new Scene(this.ctx);
+    }
+  },
   mounted() {
-    animate();
+    this.animate();
+  },
+  methods: {
+    animate() {
+      let ctx = this.ctx;
+      let scene = this.scene;
+      ctx.clearRect(0, 0, W, H);
+      scene.start();
+      requestAnimationFrame(
+        this.animate
+      );
+    }
   }
 };
 </script>

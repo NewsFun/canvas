@@ -93,3 +93,7 @@ body {
 #cache {
   display: none;
 }
+
+.mg-center {
+  margin: 0 auto;
+}
