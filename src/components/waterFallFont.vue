@@ -3,6 +3,7 @@
 </template>
 <script>
 import { W, H } from "@/util/stage.js";
+import { render } from "@/util/render.js";
 import { randomInteger, randomLetter } from "@/util/tools.js";
 
 let fontList = [];
@@ -14,24 +15,19 @@ class Sprite {
     this.over = false;
     this.opacity = 1;
     this.text = randomLetter();
+    this.type = "text";
   }
   reduce() {
     this.opacity -= 0.01;
     this.over = this.opacity <= 0;
-    return this;
-  }
-  render(ctx) {
-    ctx.save();
-    ctx.fillStyle = `rgba(0, 255, 0, ${this.opacity})`;
-    ctx.fillText(this.text, this.x, this.y);
-    ctx.restore();
+    this.c = `rgba(0, 255, 0, ${this.opacity})`;
   }
 }
 // 组
 class List {
   constructor(ctx) {
     this.end = false;
-    this.spriteList = [];
+    this.spiritList = [];
     this.x = randomInteger(0, W);
     this.length = randomInteger(8, 50);
     this.ctx = ctx;
@@ -40,19 +36,20 @@ class List {
     this.addSprite().draw();
   }
   addSprite() {
-    if (this.spriteList.length < this.length) {
-      let len = this.spriteList.length;
+    if (this.spiritList.length < this.length) {
+      let len = this.spiritList.length;
       let ly = len * 20;
-      this.spriteList.push(new Sprite(this.x, ly));
+      this.spiritList.push(new Sprite(this.x, ly));
     }
     return this;
   }
   draw() {
     let ctx = this.ctx;
-    this.spriteList.forEach(sprite => {
-      sprite.reduce().render(ctx);
+    this.spiritList.forEach(spirit => {
+      spirit.reduce();
+      render(ctx, spirit);
     });
-    let last = [...this.spriteList].pop();
+    let last = [...this.spiritList].pop();
     this.end = last.over;
   }
 }

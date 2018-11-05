@@ -3,10 +3,12 @@
 </template>
 <script>
 import { cacheCtx, W, H } from "@/util/stage.js";
-import { randomColor, isNumber } from "@/util/tools.js";
+import { randomColor, isNumber, distance, bounce, roundShake } from "@/util/tools.js";
+import { render } from "@/util/render.js";
 
+const TXT = "祝大家新年快乐";
+const txt = TXT.split("");
 const R = Math.random;
-const txt = ["祝", "大", "家", "节", "日", "快", "乐"];
 
 let ba = [];
 let bs = [];
@@ -21,45 +23,18 @@ class Dot {
     this.b = {
       x: arg.x,
       y: arg.y,
-      z: arg.z,
+      r: arg.r,
       c: arg.c || randomColor(),
       vx: (R() - 0.5) * 4,
-      vy: (R() - 0.5) * 4
+      vy: (R() - 0.5) * 4,
+      type: "arc"
     };
     this.e = 0.07;
     this.s = true;
     this.ctx = arg.ctx;
   }
-  distance(n, details) {
-    let dx = this.b.x - n.x,
-      dy = this.b.y - n.y,
-      d = Math.sqrt(dx * dx + dy * dy);
-
-    return details ? [dx, dy, d] : d;
-  }
-  bounce(self) {
-    self.x += self.vx;
-    self.y += self.vy;
-
-    if (self.x - self.z <= 0) {
-      self.vx = -self.vx;
-      self.x = self.z;
-    }
-    if (self.x + self.z >= W) {
-      self.vx = -self.vx;
-      self.x = W - self.z;
-    }
-    if (self.y - self.z <= 0) {
-      self.vy = -self.vy;
-      self.y = self.z;
-    }
-    if (self.y + self.z >= H) {
-      self.vy = -self.vy;
-      self.y = H - self.z;
-    }
-  }
   update(goal) {
-    let dis = this.distance(goal, true);
+    let dis = distance(this.b, goal, true);
     let d = dis[2],
       dx = dis[0],
       dy = dis[1];
@@ -68,30 +43,22 @@ class Dot {
         this.b.x -= dx * this.e;
         this.b.y -= dy * this.e;
       } else {
-        this.b.x -= Math.sin(R() * 3.142);
-        this.b.y -= Math.sin(R() * 3.142);
+        roundShake(this.b);
       }
     } else {
-      this.bounce(this.b);
+      bounce(0, 0, W, H, this.b);
     }
-    return this;
   }
   moveTo(goal) {
-    this.update(goal).render(this.b);
-  }
-  render(ball) {
-    let ctx = this.ctx;
-    ctx.fillStyle = ball.c;
-    ctx.beginPath();
-    ctx.arc(ball.x, ball.y, ball.z, 0, Math.PI * 2, true);
-    ctx.fill();
+    this.update(goal);
+    render(this.ctx, this.b);
   }
 }
 // 缓存数据
 function fillTxt(txt) {
   cacheCtx.textAlign = "center";
   cacheCtx.textBaseline = "middle";
-  cacheCtx.fillStyle = "white";
+  cacheCtx.fillStyle = "#fff";
   setFont(txt);
   cacheCtx.fillText(txt, W / 2, H / 2);
 }
@@ -179,7 +146,7 @@ export default {
           new Dot({
             x: R() * W,
             y: R() * H,
-            z: R() * 6 + 4,
+            r: R() * 6 + 4,
             ctx: this.ctx
           })
         );
@@ -192,11 +159,10 @@ export default {
       }
     },
     checkLength() {
-      if (ba.length == bs.length) return;
-      let bal = ba.length,
-        bsl = bs.length,
-        len = Math.abs(bal - bsl);
-
+      let bal = ba.length;
+      let bsl = bs.length;
+      if (bal == bsl) return;
+      let len = Math.abs(bal - bsl);
       if (bal > bsl) {
         for (let i = 0; i < len; i++) {
           bs.push({
@@ -210,7 +176,7 @@ export default {
             new Dot({
               x: R() * W,
               y: R() * H,
-              z: R() * 6 + 4,
+              r: R() * 6 + 4,
               ctx: this.ctx
             })
           );

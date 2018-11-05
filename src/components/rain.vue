@@ -3,18 +3,19 @@
 </template>
 <script>
 import { W, H } from "@/util/stage.js";
+import { render } from "@/util/render.js";
 
 const Bottom = H - 32;
 
 class Drop {
-  constructor(ctx) {
+  constructor() {
     this.x = ~~(Math.random() * W);
     this.y = 0;
     this.v = 0;
     this.w = 1;
     this.l = 16;
     this.end = false;
-    this.ctx = ctx;
+    this.type = "rect";
   }
   isBottom() {
     let by = this.l + this.y;
@@ -35,15 +36,6 @@ class Drop {
         this.y += this.v;
       }
     }
-    return this;
-  }
-  render() {
-    let ctx = this.ctx;
-    ctx.fillStyle = "#FFF";
-    ctx.beginPath();
-    ctx.fillRect(this.x, this.y, this.w, this.l);
-    ctx.closePath();
-    ctx.fill();
   }
 }
 
@@ -54,7 +46,7 @@ class Scene {
   }
   start() {
     if (this.lists.length < 120) {
-      this.lists.push(new Drop(this.ctx));
+      this.lists.push(new Drop());
     }
     this.loop();
   }
@@ -63,7 +55,8 @@ class Scene {
       if (item.end) {
         this.lists.splice(i, 1);
       } else {
-        item.update().render();
+        item.update();
+        render(this.ctx, item);
       }
     });
   }

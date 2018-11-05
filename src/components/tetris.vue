@@ -1,11 +1,11 @@
 <template>
-  <canvas class="mg-center" ref="canvas"></canvas>
+  <canvas ref="canvas"></canvas>
 </template>
 <script>
-import { cacheCtx } from "@/util/stage.js";
+import { cacheCtx, W, H } from "@/util/stage.js";
 
-const W = 450;
-const H = 800;
+// const W = 750;
+// const H = 1334;
 
 export default {
   computed: {
