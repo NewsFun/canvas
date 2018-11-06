@@ -28,8 +28,8 @@ class List {
   constructor(ctx) {
     this.end = false;
     this.spiritList = [];
-    this.x = randomInteger(0, W);
-    this.length = randomInteger(8, 50);
+    this.x = randomInteger(W);
+    this.length = randomInteger(50, 8);
     this.ctx = ctx;
   }
   start() {

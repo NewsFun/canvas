@@ -3,7 +3,6 @@
 </template>
 <script>
 import { W, H } from "@/util/stage.js";
-import { Dot } from "@/util/spirit.js";
 import { render } from "@/util/render.js";
 
 let list = [];
@@ -22,7 +21,9 @@ export default {
     }
   },
   mounted() {
-    this.createDot().countingStar().render();
+    this.createDot()
+      .countingStar()
+      .render();
   },
   methods: {
     createDot() {
@@ -44,13 +45,14 @@ export default {
       return this;
     },
     render() {
-      for(let i in count) {
-        let dot = new Dot({
-            x: i,
-            y: count[i]*2,
-            r: 1,
-            c: "#fff"
-          });
+      for (let i in count) {
+        let dot = {
+          x: i,
+          y: count[i] * 2,
+          r: 1,
+          c: "#fff",
+          type: "arc"
+        };
         render(this.ctx, dot);
       }
     }

@@ -31,7 +31,7 @@ export function fixed2(number) {
   return number;
 }
 // 随机整数
-export function randomInteger(min, max) {
+export function randomInteger(max = 2, min = 0) {
   let delta = max - min;
   return parseInt(R() * delta + min);
 }
@@ -42,10 +42,11 @@ export function randomLetter() {
 }
 // 随机颜色
 export function randomColor() {
-  let r = randomInteger(0, 255);
-  let g = randomInteger(0, 255);
-  let b = randomInteger(0, 255);
-  let a = R();
+  let r = randomInteger(255);
+  let g = randomInteger(255);
+  let b = randomInteger(255);
+  // let a = R();
+  let a = 1;
   return setColor(r, g, b, a);
 }
 // 设置颜色
