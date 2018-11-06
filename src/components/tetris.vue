@@ -38,8 +38,8 @@ class Pixels {
 
     tlist.forEach(e => {
       plist.push({
-        x: e[0] * VX,
-        y: e[1] * VX,
+        x: e[1] * VX,
+        y: e[0] * VX,
         c: this.c,
         w: VX,
         l: VX,
