@@ -136,7 +136,7 @@ export const pixelStorage = [
   ],
   [
     [
-      [3, 0]
+      [0, 3]
     ]
   ]
 ];

@@ -17,6 +17,7 @@ const cachLen = VX * 4;
 const COLORS = ["#409EFF", "#67C23A", "#E6A23C", "#F56C6C"];
 
 let vy = 1;
+let bottom = H;
 let pixels = null;
 let walls = [];
 let renderList = [];
@@ -53,20 +54,7 @@ class Pixels {
     return plist;
   }
   checkBound() {
-    let bx = [];
-    let by = [];
-
-    this.list.forEach(e => {
-      bx.push(e.x);
-      by.push(e.y);
-    });
-
-    let minx = MIN(...bx);
-    let miny = MIN(...by);
-    let maxx = MAX(...bx);
-    let maxy = MAX(...by);
-
-    return [miny, maxx + VX, maxy + VX, minx];
+    return checkBound(this.list);
   }
   rotate() {
     let len = this.type.length;
@@ -91,6 +79,31 @@ function createPixels() {
   renderList = renderList.concat(pixels.list);
 }
 
+function checkBound(list) {
+  let bx = [];
+  let by = [];
+
+  list.forEach(e => {
+    bx.push(e.x);
+    by.push(e.y);
+  });
+
+  let minx = MIN(...bx);
+  let miny = MIN(...by);
+  let maxx = MAX(...bx);
+  let maxy = MAX(...by);
+
+  return [miny, maxx + VX, maxy + VX, minx];
+}
+
+function getBottom(maxx = W, minx = 0){
+  let area = walls.filter(e => {
+    return e.x >= minx && e.x <= maxx;
+  });
+
+  bottom = checkBound(area)[0];
+}
+
 export default {
   computed: {
     Stage() {
@@ -104,6 +117,7 @@ export default {
     }
   },
   mounted() {
+    document.body.onkeydown = this.onKeydown;
     createPixels();
     this.animate();
   },
@@ -115,7 +129,7 @@ export default {
     },
     update() {
       let b = pixels.checkBound()[2];
-      if (b < H) {
+      if (b < bottom) {
         pixels.update();
       } else {
         walls = walls.concat(pixels.list);
@@ -127,6 +141,28 @@ export default {
       renderList.forEach(e => {
         render(this.ctx, e);
       });
+    },
+    onKeydown(e) {
+      let kcode = e.keyCode;
+      // console.log(kcode);
+      switch (kcode) {
+        case 65: //A
+        case 37: //左键
+          break;
+        case 87: //W
+        case 38: //上键
+          break;
+        case 68: //D
+        case 39: //右键
+          break;
+        case 83: //S
+        case 40: //下贱
+          break;
+        case 72: //彩蛋
+          break;
+        default:
+          break;
+      }
     }
   }
 };
