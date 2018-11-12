@@ -59,6 +59,7 @@ class Pixels {
   rotate() {
     let len = this.type.length;
     this.index = (this.index + 1) % len;
+    this.list = this.type2pixel();
   }
 }
 
@@ -72,11 +73,6 @@ function randomColor() {
   let len = COLORS.length;
   let ind = randomInteger(len);
   return COLORS[ind];
-}
-
-function createPixels() {
-  pixels = new Pixels();
-  renderList = renderList.concat(pixels.list);
 }
 
 function checkBound(list) {
@@ -95,7 +91,7 @@ function checkBound(list) {
 
   return [miny, maxx + VX, maxy + VX, minx];
 }
-
+// 获取某一范围的顶部
 function getBottom(maxx = W, minx = 0){
   let area = walls.filter(e => {
     return e.x >= minx && e.x <= maxx;
@@ -118,7 +114,7 @@ export default {
   },
   mounted() {
     document.body.onkeydown = this.onKeydown;
-    createPixels();
+    pixels = new Pixels();
     this.animate();
   },
   methods: {
@@ -133,18 +129,19 @@ export default {
         pixels.update();
       } else {
         walls = walls.concat(pixels.list);
-        createPixels();
+        pixels = new Pixels();
       }
       this.render();
     },
     render() {
+      renderList = walls.concat(pixels.list);
       renderList.forEach(e => {
         render(this.ctx, e);
       });
     },
     onKeydown(e) {
       let kcode = e.keyCode;
-      // console.log(kcode);
+
       switch (kcode) {
         case 65: //A
         case 37: //左键
