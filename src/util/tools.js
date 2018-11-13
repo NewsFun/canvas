@@ -93,3 +93,8 @@ export function roundShake(ball) {
   ball.x -= SIN(R() * PI);
   ball.y -= SIN(R() * PI);
 }
+// 
+export function clone(obj) {
+  let ostr = JSON.stringify(obj);
+  return JSON.parse(ostr);
+}

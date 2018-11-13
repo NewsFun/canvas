@@ -4,7 +4,7 @@
 <script>
 import { cacheCtx } from "@/util/stage.js";
 import { pixelStorage } from "@/util/tetris.js";
-import { randomInteger } from "@/util/tools.js";
+import { randomInteger, clone } from "@/util/tools.js";
 import { render } from "@/util/render.js";
 
 const MIN = Math.min;
@@ -76,6 +76,8 @@ function randomColor() {
 }
 
 function checkBound(list) {
+  if (!list.length) return [H, W, 0, 0];
+
   let bx = [];
   let by = [];
 
@@ -92,12 +94,12 @@ function checkBound(list) {
   return [miny, maxx + VX, maxy + VX, minx];
 }
 // 获取某一范围的顶部
-function getBottom(maxx = W, minx = 0){
-  let area = walls.filter(e => {
-    return e.x >= minx && e.x <= maxx;
-  });
-
-  bottom = checkBound(area)[0];
+function getBottom(pixel) {
+  if (pixel.y >= H) return true;
+  for (let i = 0; i < walls.length; i++) {
+    if (pixel.x === walls[i].x && pixel.y === walls[i].y) return true;
+  }
+  return false;
 }
 
 export default {
@@ -124,12 +126,11 @@ export default {
       requestAnimationFrame(this.animate);
     },
     update() {
-      let b = pixels.checkBound()[2];
-      if (b < bottom) {
-        pixels.update();
-      } else {
+      if (this.ifNext()) {
         walls = walls.concat(pixels.list);
         pixels = new Pixels();
+      } else {
+        pixels.update();
       }
       this.render();
     },
@@ -138,6 +139,15 @@ export default {
       renderList.forEach(e => {
         render(this.ctx, e);
       });
+    },
+    ifNext() {
+      let list = pixels.list;
+      for (let i = 0; i < list.length; i++) {
+        let ni = clone(list[i]);
+        ni.y += VX;
+        if (getBottom(ni)) return true;
+      }
+      return false;
     },
     onKeydown(e) {
       let kcode = e.keyCode;
