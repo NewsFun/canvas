@@ -19,6 +19,7 @@ const COLORS = ["#409EFF", "#67C23A", "#E6A23C", "#F56C6C"];
 let vy = 1;
 let bottom = H;
 let pixels = null;
+let gameState = "begin";
 let walls = [];
 let renderList = [];
 
@@ -126,12 +127,14 @@ export default {
       requestAnimationFrame(this.animate);
     },
     update() {
-      if (this.ifNext()) {
-        walls = walls.concat(pixels.list);
-        pixels = new Pixels();
-      } else {
-        pixels.update();
-      }
+      // if (this.ifNext()) {
+      //   walls = walls.concat(pixels.list);
+      //   pixels = new Pixels();
+      // } else {
+      //   pixels.update();
+      // }
+      gameState = this.getState();
+      this.gameStep();
       this.render();
     },
     render() {
@@ -140,14 +143,15 @@ export default {
         render(this.ctx, e);
       });
     },
-    ifNext() {
+    getState() {
+      if (checkBound(walls)[0] <= 0) return "end";
       let list = pixels.list;
       for (let i = 0; i < list.length; i++) {
         let ni = clone(list[i]);
         ni.y += VX;
-        if (getBottom(ni)) return true;
+        if (getBottom(ni)) return "next";
       }
-      return false;
+      return "drop";
     },
     onKeydown(e) {
       let kcode = e.keyCode;
@@ -166,6 +170,19 @@ export default {
         case 40: //下贱
           break;
         case 72: //彩蛋
+          break;
+        default:
+          break;
+      }
+    },
+    gameStep() {
+      switch (gameState) {
+        case "next":
+          walls = walls.concat(pixels.list);
+          pixels = new Pixels();
+          break;
+        case "drop":
+          pixels.update();
           break;
         default:
           break;
