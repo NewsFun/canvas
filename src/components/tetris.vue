@@ -9,6 +9,8 @@ import { render } from "@/util/render.js";
 
 const MIN = Math.min;
 const MAX = Math.max;
+const Ceil = Math.ceil;
+const Floor = Math.floor;
 
 const W = 400;
 const H = 800;
@@ -16,7 +18,6 @@ const VX = 20;
 const cachLen = VX * 4;
 const COLORS = ["#409EFF", "#67C23A", "#E6A23C", "#F56C6C"];
 
-let vy = 1;
 let bottom = H;
 let pixels = null;
 let gameState = "begin";
@@ -31,10 +32,10 @@ class Pixels {
     this.type = getPixelType();
     this.list = this.type2pixel();
   }
-  update(dist = 0) {
+  update(vx = 0, vy = 1) {
     this.list.forEach(e => {
       e.y += vy;
-      e.x += dist;
+      e.x += vx;
     });
   }
   type2pixel() {
@@ -94,13 +95,70 @@ function checkBound(list) {
 
   return [miny, maxx + VX, maxy + VX, minx];
 }
-// 获取某一范围的顶部
+// 碰撞检测：栅格法
 function getBottom(pixel) {
   if (pixel.y >= H) return true;
   for (let i = 0; i < walls.length; i++) {
     if (pixel.x === walls[i].x && pixel.y === walls[i].y) return true;
   }
   return false;
+}
+
+function getState() {
+  if (checkBound(walls)[0] <= 0) return "end";
+
+  let list = pixels.list;
+  for (let i = 0; i < list.length; i++) {
+    let e = list[i];
+    let ny = Floor(e.y / VX) * VX;
+    let ni = {
+      x: e.x,
+      y: ny + VX
+    };
+    if (getBottom(ni)) {
+      e.y = ny;
+      return "next";
+    }
+  }
+  return "drop";
+}
+
+function gameStep() {
+  switch (gameState) {
+    case "next":
+      walls = walls.concat(pixels.list);
+      pixels = new Pixels();
+      break;
+    case "drop":
+      pixels.update();
+      break;
+    default:
+      break;
+  }
+}
+// 按键
+function onKeydown(e) {
+  let kcode = e.keyCode;
+
+  switch (kcode) {
+    case 65: //A
+    case 37: //左键
+      break;
+    case 87: //W
+    case 38: //上键
+      break;
+    case 68: //D
+    case 39: //右键
+      break;
+    case 83: //S
+    case 40: //下贱
+      pixels.update(0, 10);
+      break;
+    case 72: //彩蛋
+      break;
+    default:
+      break;
+  }
 }
 
 export default {
@@ -116,7 +174,7 @@ export default {
     }
   },
   mounted() {
-    document.body.onkeydown = this.onKeydown;
+    document.body.onkeydown = onKeydown;
     pixels = new Pixels();
     this.animate();
   },
@@ -127,66 +185,15 @@ export default {
       requestAnimationFrame(this.animate);
     },
     update() {
-      // if (this.ifNext()) {
-      //   walls = walls.concat(pixels.list);
-      //   pixels = new Pixels();
-      // } else {
-      //   pixels.update();
-      // }
-      gameState = this.getState();
-      this.gameStep();
-      this.render();
+      gameState = getState();
+      gameStep();
+      this.renderScene();
     },
-    render() {
+    renderScene() {
       renderList = walls.concat(pixels.list);
       renderList.forEach(e => {
         render(this.ctx, e);
       });
-    },
-    getState() {
-      if (checkBound(walls)[0] <= 0) return "end";
-      let list = pixels.list;
-      for (let i = 0; i < list.length; i++) {
-        let ni = clone(list[i]);
-        ni.y += VX;
-        if (getBottom(ni)) return "next";
-      }
-      return "drop";
-    },
-    onKeydown(e) {
-      let kcode = e.keyCode;
-
-      switch (kcode) {
-        case 65: //A
-        case 37: //左键
-          break;
-        case 87: //W
-        case 38: //上键
-          break;
-        case 68: //D
-        case 39: //右键
-          break;
-        case 83: //S
-        case 40: //下贱
-          break;
-        case 72: //彩蛋
-          break;
-        default:
-          break;
-      }
-    },
-    gameStep() {
-      switch (gameState) {
-        case "next":
-          walls = walls.concat(pixels.list);
-          pixels = new Pixels();
-          break;
-        case "drop":
-          pixels.update();
-          break;
-        default:
-          break;
-      }
     }
   }
 };
