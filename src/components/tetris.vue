@@ -1,6 +1,7 @@
 <template>
   <canvas ref="canvas"></canvas>
 </template>
+
 <script>
 import { cacheCtx } from "@/util/stage.js";
 import { pixelStorage } from "@/util/tetris.js";
