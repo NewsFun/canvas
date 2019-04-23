@@ -22,23 +22,27 @@ const COLORS = ["#409EFF", "#67C23A", "#E6A23C", "#F56C6C"];
 let bottom = H;
 let pixels = null;
 let gameState = "begin";
-let walls = [];
 let renderList = [];
+let walls = [];
 
 class Pixels {
   constructor(ctx) {
     this.bound = [0, 0, 0, 0];
+    this.dropHeight = 0;
     this.index = 0;
     this.c = randomColor();
     this.type = getPixelType();
     this.list = this.type2pixel();
   }
+  // 更新坐标
   update(vx = 0, vy = 1) {
     this.list.forEach(e => {
       e.y += vy;
       e.x += vx;
     });
+    this.dropHeight += vy;
   }
+  // 生成渲染对象
   type2pixel() {
     let tlist = this.type[this.index];
     let plist = [];
@@ -46,7 +50,7 @@ class Pixels {
     tlist.forEach(e => {
       plist.push({
         x: e[1] * VX,
-        y: e[0] * VX,
+        y: e[0] * VX + this.dropHeight,
         c: this.c,
         w: VX,
         l: VX,
@@ -56,9 +60,7 @@ class Pixels {
 
     return plist;
   }
-  checkBound() {
-    return checkBound(this.list);
-  }
+  // 变形
   rotate() {
     let len = this.type.length;
     this.index = (this.index + 1) % len;
@@ -77,7 +79,7 @@ function randomColor() {
   let ind = randomInteger(len);
   return COLORS[ind];
 }
-
+// 返回边界
 function checkBound(list) {
   if (!list.length) return [H, W, 0, 0];
 
@@ -104,7 +106,7 @@ function getBottom(pixel) {
   }
   return false;
 }
-
+// 游戏状态
 function getState() {
   if (checkBound(walls)[0] <= 0) return "end";
 
@@ -144,12 +146,15 @@ function onKeydown(e) {
   switch (kcode) {
     case 65: //A
     case 37: //左键
+      pixels.update(-10, 0);
       break;
     case 87: //W
     case 38: //上键
+      pixels.rotate()
       break;
     case 68: //D
     case 39: //右键
+      pixels.update(10, 0);
       break;
     case 83: //S
     case 40: //下贱
