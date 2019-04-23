@@ -75,7 +75,7 @@ class Pixels {
   moveRight() {
     let maxx = checkBound(this.list)[1];
     if (maxx < W) {
-      pixels.update(VX, 0);
+      this.update(VX, 0);
     }
   }
 }
