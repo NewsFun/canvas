@@ -66,6 +66,18 @@ class Pixels {
     this.index = (this.index + 1) % len;
     this.list = this.type2pixel();
   }
+  moveLeft() {
+    let minx = checkBound(this.list)[3];
+    if (minx > 0) {
+      this.update(-VX, 0);
+    }
+  }
+  moveRight() {
+    let maxx = checkBound(this.list)[1];
+    if (maxx < W) {
+      pixels.update(VX, 0);
+    }
+  }
 }
 
 function getPixelType() {
@@ -109,6 +121,7 @@ function getBottom(pixel) {
 // 游戏状态
 function getState() {
   if (checkBound(walls)[0] <= 0) return "end";
+  if (checkBound(pixels)[2] > H) return "next";
 
   let list = pixels.list;
   for (let i = 0; i < list.length; i++) {
@@ -146,10 +159,7 @@ function onKeydown(e) {
   switch (kcode) {
     case 65: //A
     case 37: //左键
-      let minx = checkBound(pixels.list)[3];
-      if (minx > 0) {
-        pixels.update(-10, 0);
-      }
+      pixels.moveLeft()
       break;
     case 87: //W
     case 38: //上键
@@ -157,10 +167,7 @@ function onKeydown(e) {
       break;
     case 68: //D
     case 39: //右键
-      let maxx = checkBound(pixels.list)[1];
-      if (maxx < W) {
-        pixels.update(10, 0);
-      }
+      pixels.moveRight()
       break;
     case 83: //S
     case 40: //下贱
