@@ -146,7 +146,10 @@ function onKeydown(e) {
   switch (kcode) {
     case 65: //A
     case 37: //左键
-      pixels.update(-10, 0);
+      let minx = checkBound(pixels.list)[3];
+      if (minx > 0) {
+        pixels.update(-10, 0);
+      }
       break;
     case 87: //W
     case 38: //上键
@@ -154,7 +157,10 @@ function onKeydown(e) {
       break;
     case 68: //D
     case 39: //右键
-      pixels.update(10, 0);
+      let maxx = checkBound(pixels.list)[1];
+      if (maxx < W) {
+        pixels.update(10, 0);
+      }
       break;
     case 83: //S
     case 40: //下贱
