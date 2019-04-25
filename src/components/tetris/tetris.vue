@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import { cacheCtx } from "@/util/stage.js";
 import { pixelStorage } from "@/util/tetris.js";
 import { randomInteger, clone } from "@/util/tools.js";
 import { render } from "@/util/render.js";

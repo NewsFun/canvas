@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import WaterFallFont from '@/components/waterFallFont'
 import Particle from '@/components/particle'
 import Random from '@/components/random'
-import Tetris from '@/components/tetris'
+import Tetris from '@/components/tetris/tetris'
 import Rain from '@/components/rain'
 
 Vue.use(Router)

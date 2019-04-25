@@ -140,3 +140,28 @@ export const pixelStorage = [
     ]
   ]
 ];
+
+export const W = 400;
+export const H = 800;
+export const VX = 20;
+export const cachLen = VX * 4;
+export const COLORS = ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C'];
+
+export function checkBound (list) {
+  if (!list.length) return [H, W, 0, 0];
+
+  let bx = [];
+  let by = [];
+
+  list.forEach(e => {
+    bx.push(e.x);
+    by.push(e.y);
+  });
+
+  let minx = Math.min(...bx);
+  let miny = Math.min(...by);
+  let maxx = Math.max(...bx);
+  let maxy = Math.max(...by);
+
+  return [miny, maxx + VX, maxy + VX, minx];
+};
