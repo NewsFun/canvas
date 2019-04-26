@@ -58,7 +58,6 @@ export default {
     },
     moveLeft (W) {
       let minx = checkBound(this.list)[3];
-      console.log(minx, W);
       if (minx > W) {
         this.update(-VX, 0);
       }

@@ -5,7 +5,7 @@
 <script>
 import Vue from "vue";
 import Pixels from "./pixels.js";
-import { pixelStorage, checkBound } from "@/util/tetris.js";
+import { pixelStorage, checkBound, VX, W, H } from "@/util/tetris.js";
 import { randomInteger, clone } from "@/util/tools.js";
 import { render } from "@/util/render.js";
 
@@ -14,103 +14,11 @@ const MAX = Math.max;
 const Ceil = Math.ceil;
 const Floor = Math.floor;
 
-const W = 400;
-const H = 800;
-const VX = 20;
-const cachLen = VX * 4;
-const COLORS = ["#409EFF", "#67C23A", "#E6A23C", "#F56C6C"];
-
-let bottom = H;
 let pixels = null;
 let gameState = "begin";
 let renderList = [];
 let walls = [];
 
-// class Pixels {
-//   constructor(ctx) {
-//     this.bound = [0, 0, 0, 0];
-//     this.dropHeight = 0;
-//     this.index = 0;
-//     this.c = randomColor();
-//     this.type = getPixelType();
-//     this.list = this.type2pixel();
-//   }
-//   // 更新坐标
-//   update(vx = 0, vy = 1) {
-//     this.list.forEach(e => {
-//       e.y += vy;
-//       e.x += vx;
-//     });
-//     this.dropHeight += vy;
-//   }
-//   // 生成渲染对象
-//   type2pixel() {
-//     let tlist = this.type[this.index];
-//     let plist = [];
-
-//     tlist.forEach(e => {
-//       plist.push({
-//         x: e[1] * VX,
-//         y: e[0] * VX + this.dropHeight,
-//         c: this.c,
-//         w: VX,
-//         l: VX,
-//         type: "rect"
-//       });
-//     });
-
-//     return plist;
-//   }
-//   // 变形
-//   rotate() {
-//     let len = this.type.length;
-//     this.index = (this.index + 1) % len;
-//     this.list = this.type2pixel();
-//   }
-//   moveLeft() {
-//     let minx = checkBound(this.list)[3];
-//     if (minx > 0) {
-//       this.update(-VX, 0);
-//     }
-//   }
-//   moveRight() {
-//     let maxx = checkBound(this.list)[1];
-//     if (maxx < W) {
-//       this.update(VX, 0);
-//     }
-//   }
-// }
-
-function getPixelType() {
-  let len = pixelStorage.length;
-  let ind = randomInteger(len);
-  return pixelStorage[ind];
-}
-
-function randomColor() {
-  let len = COLORS.length;
-  let ind = randomInteger(len);
-  return COLORS[ind];
-}
-// 返回边界
-// function checkBound(list) {
-//   if (!list.length) return [H, W, 0, 0];
-
-//   let bx = [];
-//   let by = [];
-
-//   list.forEach(e => {
-//     bx.push(e.x);
-//     by.push(e.y);
-//   });
-
-//   let minx = MIN(...bx);
-//   let miny = MIN(...by);
-//   let maxx = MAX(...bx);
-//   let maxy = MAX(...by);
-
-//   return [miny, maxx + VX, maxy + VX, minx];
-// }
 // 碰撞检测：栅格法
 function getBottom(pixel) {
   if (pixel.y >= H) return true;
@@ -144,7 +52,7 @@ function gameStep() {
   switch (gameState) {
     case "next":
       walls = walls.concat(pixels.list);
-      pixels = new Pixels();
+      pixels = new Vue(Pixels);
       break;
     case "drop":
       pixels.update();
