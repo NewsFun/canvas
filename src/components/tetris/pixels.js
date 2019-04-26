@@ -6,7 +6,8 @@ export default {
     return {
       bound: [0, 0, 0, 0],
       dropHeight: 0,
-      index: 0
+      index: 0,
+      list: []
     };
   },
   computed: {
@@ -14,22 +15,6 @@ export default {
       let len = COLORS.length;
       let ind = randomInteger(len);
       return COLORS[ind];
-    },
-    list () {
-      let plist = [];
-
-      this.typeList.forEach(e => {
-        plist.push({
-          x: e[1] * VX,
-          y: e[0] * VX + this.dropHeight,
-          c: this.color,
-          w: VX,
-          l: VX,
-          type: 'rect'
-        });
-      });
-
-      return plist;
     },
     type () {
       let len = pixelStorage.length;
@@ -42,6 +27,9 @@ export default {
     typeLength () {
       return this.type.length;
     }
+  },
+  created () {
+    this.initList();
   },
   methods: {
     // 更新坐标
@@ -58,7 +46,6 @@ export default {
     },
     moveLeft (W) {
       let minx = checkBound(this.list)[3];
-      console.log(this.list);
       if (minx > W) {
         this.update(-VX, 0);
       }
@@ -68,6 +55,18 @@ export default {
       if (maxx < W) {
         this.update(VX, 0);
       }
+    },
+    initList () {
+      this.typeList.forEach(e => {
+        this.list.push({
+          x: e[1] * VX,
+          y: e[0] * VX + this.dropHeight,
+          c: this.color,
+          w: VX,
+          l: VX,
+          type: 'rect'
+        });
+      });
     }
   }
 };
