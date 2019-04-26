@@ -13,8 +13,7 @@ Vue.prototype.$http = http
 const store = new Vuex.Store({
   state: {
     user: {
-      name: '',
-      company: '中化能源'
+      name: ''
     }
   },
   mutations: {

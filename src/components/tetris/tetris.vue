@@ -104,7 +104,6 @@ export default {
   mounted() {
     document.body.onkeydown = onKeydown;
     pixels = new Vue(Pixels);
-    // pixels = new Pixels();
     this.animate();
   },
   methods: {
