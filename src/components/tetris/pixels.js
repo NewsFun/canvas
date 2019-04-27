@@ -5,7 +5,8 @@ export default {
   data () {
     return {
       bound: [0, 0, 0, 0],
-      dropHeight: 0,
+      dropX: 0,
+      dropY: 0,
       index: 0,
       list: []
     };
@@ -29,7 +30,7 @@ export default {
     }
   },
   created () {
-    this.initList();
+    this.list = this.initList();
   },
   methods: {
     // 更新坐标
@@ -38,11 +39,13 @@ export default {
         e.y += vy;
         e.x += vx;
       });
-      this.dropHeight += vy;
+      this.dropY += vy;
+      this.dropX += vx;
     },
     // 变形
     rotate () {
       this.index = (this.index + 1) % this.typeLength;
+      this.list = this.initList();
     },
     moveLeft (W) {
       let minx = checkBound(this.list)[3];
@@ -57,16 +60,18 @@ export default {
       }
     },
     initList () {
+      let plist = [];
       this.typeList.forEach(e => {
-        this.list.push({
-          x: e[1] * VX,
-          y: e[0] * VX + this.dropHeight,
+        plist.push({
+          x: e[1] * VX + this.dropX,
+          y: e[0] * VX + this.dropY,
           c: this.color,
           w: VX,
           l: VX,
           type: 'rect'
         });
       });
+      return plist
     }
   }
 };
