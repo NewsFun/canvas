@@ -102,7 +102,6 @@
       self.fillColor = this.getCenterColor();
       drawRectangle(self);
       if (self.monitorType) self.monitor();
-
     },
     monitor: function () {
       var self = this;
