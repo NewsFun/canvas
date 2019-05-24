@@ -5,8 +5,6 @@
 </template>
 
 <script>
-import { W, H } from "@/util/stage.js";
-
 let imgData = [], Paths = {}, key = 0, type = {};
 
 function evnt(path, pos) {
@@ -126,6 +124,12 @@ export default {
     },
     img() {
       return this.$refs["img"];
+    },
+    imgWidth() {
+      return this.img.width;
+    },
+    imgHeight() {
+      return this.img.height;
     }
   },
   methods: {
@@ -144,16 +148,20 @@ export default {
       }
     },
     onMosaic() {
+      let w = this.imgWidth;
+      let h = this.imgHeight;
+      canvas.width = w;
+      canvas.height = h;
       this.ctx.drawImage(img, 0, 0);
-      imgData = this.ctx.getImageData(0, 0, W, H).data;
+      imgData = this.ctx.getImageData(0, 0, w, h).data;
       new Path().Rectangle({
         origin: {
           x: 0,
           y: 0
         },
         size: {
-          w: W,
-          h: H
+          w,
+          h
         }
       });
     }
