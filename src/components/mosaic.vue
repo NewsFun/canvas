@@ -74,10 +74,10 @@ class Path {
   monitor() {
     this.key = key;
     Paths[key] = this;
-    if (!type[this.monitorType]) {
-      type[this.monitorType] = {};
-    }
-    type[this.monitorType][key] = this;
+    // if (!type[this.monitorType]) {
+    //   type[this.monitorType] = {};
+    // }
+    // type[this.monitorType][key] = this;
 
     key += 1;
   }
