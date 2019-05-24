@@ -5,15 +5,12 @@
 </template>
 
 <script>
-const IMG = new Image();
-
 let imgData = [];
 let Paths = {};
 let type = {};
 let key = 0;
 
 function evnt(path, pos) {
-  //console.log(path);
   if (path.size.w < 2 || path.size.h < 2) return;
   if (path.size.w > path.size.h) {
     new Path().Rectangle({
