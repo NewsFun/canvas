@@ -1,11 +1,16 @@
 <template>
   <canvas ref="canvas" @mousemove="onMouseMove">
-    <img ref="img" @load="onMosaic" src alt srcset style="display:none">
+    <img ref="img" src="/static/img/1.jpg" style="display:none;" @load="onMosaic"/>
   </canvas>
 </template>
 
 <script>
-let imgData = [], Paths = {}, key = 0, type = {};
+const IMG = new Image();
+
+let imgData = [];
+let Paths = {};
+let type = {};
+let key = 0;
 
 function evnt(path, pos) {
   //console.log(path);
@@ -66,17 +71,12 @@ class Path {
     Object.assign(this, config);
     this.setBounds();
     this.fillColor = this.getCenterColor();
-    render(this);
-    if (this.monitorType) this.monitor();
+    this.render();
+    this.monitor();
   }
   monitor() {
     this.key = key;
     Paths[key] = this;
-    // if (!type[this.monitorType]) {
-    //   type[this.monitorType] = {};
-    // }
-    // type[this.monitorType][key] = this;
-
     key += 1;
   }
   setBounds() {
@@ -89,52 +89,59 @@ class Path {
     return this;
   }
   getCenterColor() {
-    var x = this.center.x,
+    let x = this.center.x,
       y = this.center.y;
-    var num = (x + (y - 1) * w) * 4;
-    var r = imgData[num],
+    let num = (x + (y - 1) * this.imgWidth) * 4;
+    let r = imgData[num],
       g = imgData[num + 1],
       b = imgData[num + 2],
       a = imgData[num + 3] / 255;
     //console.log(r, g, b, a);
     return "rgba(" + r + "," + g + "," + b + "," + a + ")";
   }
-}
-
-function render(path) {
-  ctx.save();
-  ctx.fillStyle = path.fillColor;
-  ctx.fillRect(path.origin.x, path.origin.y, path.size.w, path.size.h);
-  ctx.restore();
+  render() {
+    this.ctx.save();
+    this.ctx.fillStyle = this.fillColor;
+    this.ctx.fillRect(this.origin.x, this.origin.y, this.size.w, this.size.h);
+    this.ctx.restore();
+  }
 }
 
 export default {
   data() {
-    return {};
+    return {
+      img: null,
+      loaded: false,
+      stage: null,
+    };
   },
   computed: {
-    Stage() {
-      let stage = this.$refs["canvas"];
-      stage.width = W;
-      stage.height = H;
-      return stage;
-    },
     ctx() {
-      return this.Stage.getContext("2d");
-    },
-    img() {
-      return this.$refs["img"];
+      if (this.stage) return this.stage.getContext("2d");
+      return null;
     },
     imgWidth() {
-      return this.img.width;
+      if (this.img) return this.img.width;
+      return 0;
     },
     imgHeight() {
-      return this.img.height;
+      if (this.img) return this.img.height;
+      return 0;
+    },
+    stageLeft() {
+      if (this.stage) return this.stage.offsetLeft;
+      return 0;
+    },
+    stageTop() {
+      if (this.stage) return this.stage.offsetTop;
+      return 0;
     }
   },
   methods: {
     onMouseMove(e) {
-      let rx = e.clientX - left, ry = e.clientY - top;
+      if (!this.loaded) return false;
+      let rx = e.clientX - this.stageLeft;
+      let ry = e.clientY - this.stageTop;
       for (let i in Paths) {
         let p = Paths[i];
         if (
@@ -148,11 +155,20 @@ export default {
       }
     },
     onMosaic() {
+      this.loaded = true;
+      this.stage = this.$refs.canvas;
+      this.img = this.$refs.img;
+
       let w = this.imgWidth;
       let h = this.imgHeight;
-      canvas.width = w;
-      canvas.height = h;
-      this.ctx.drawImage(img, 0, 0);
+
+      this.stage.width = w;
+      this.stage.height = h;
+
+      Path.prototype.ctx = this.ctx;
+      Path.prototype.imgWidth = this.imgWidth;
+
+      this.ctx.drawImage(this.img, 0, 0);
       imgData = this.ctx.getImageData(0, 0, w, h).data;
       new Path().Rectangle({
         origin: {

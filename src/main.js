@@ -4,11 +4,9 @@ import Vue from 'vue'
 import App from './App'
 import Vuex from 'vuex'
 import router from './router'
-import { http } from './api/http'
 
 Vue.use(Vuex)
 Vue.config.productionTip = false
-Vue.prototype.$http = http
 /* eslint-disable no-new */
 const store = new Vuex.Store({
   state: {
