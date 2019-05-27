@@ -1,6 +1,6 @@
 <template>
   <canvas ref="canvas" @mousemove="onMouseMove">
-    <img ref="img" src="/static/img/1.jpg" style="display:none;" @load="onMosaic"/>
+    <img ref="img" src="/static/img/3.jpg" style="display:none;" @load="onMosaic"/>
   </canvas>
 </template>
 
