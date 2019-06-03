@@ -4,7 +4,7 @@
 (function(window){
     var img = new Image(),
         canvas = window.document.querySelector('#dolly2');
-    img.src = '../img/1.jpg';
+    img.src = '../img/beibei.jpg';
     var w = img.width, h = img.height,
         ctx = canvas.getContext('2d');
     var imgData = [], Paths = {}, key = 0, type = {};
