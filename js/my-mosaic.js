@@ -6,7 +6,7 @@
     var canvas = document.querySelector('#dolly2');
     img.src = '../img/beibei.jpg';
 
-    var eventName = isPC() ? 'mousemove' : 'touchmove';
+    var eventName = isMobile() ? 'touchmove' : 'mousemove';
     var w = img.width,
         h = img.height,
         ctx = canvas.getContext('2d');
@@ -153,12 +153,12 @@
         return result;
     }
 
-    function isPC() {
+    function isMobile() {
         var ua = navigator.userAgent;
         var ipad = ua.match(/(iPad).*OS\s([\d_]+)/),
-        isIphone =!ipad && ua.match(/(iPhone\sOS)\s([\d_]+)/),
-        isAndroid = ua.match(/(Android)\s+([\d.]+)/),
-        isMobile = isIphone || isAndroid;
+            isIphone =!ipad && ua.match(/(iPhone\sOS)\s([\d_]+)/),
+            isAndroid = ua.match(/(Android)\s+([\d.]+)/),
+            isMobile = isIphone || isAndroid;
         //判断
         return isMobile;
     }
