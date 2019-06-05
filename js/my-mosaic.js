@@ -2,13 +2,20 @@
  * Created by bobo on 2017/3/20.
  */
 (function(window){
-    var img = new Image(),
-        canvas = window.document.querySelector('#dolly2');
+    var img = new Image();
+    var canvas = document.querySelector('#dolly2');
     img.src = '../img/beibei.jpg';
-    var w = img.width, h = img.height,
+
+    var eventName = isPC() ? 'mousemove' : 'touchmove';
+    var w = img.width,
+        h = img.height,
         ctx = canvas.getContext('2d');
-    var imgData = [], Paths = {}, key = 0, type = {};
-    function mosaic(){
+    var imgData = [],
+        Paths = {},
+        key = 0,
+        type = {};
+
+    img.onload = function (){
         canvas.width = w;
         canvas.height = h;
         ctx.drawImage(img, 0, 0);
@@ -16,10 +23,11 @@
         new Path().Rectangle({
             origin:{x:0, y:0},
             size:{w:w,h:h},
-            monitorType:'mousemove',
+            monitorType:eventName,
             monitorEvent:evnt
         });
     }
+
     function evnt(path, pos){
         //console.log(path);
         if(path.size.w<2||path.size.h<2) return;
@@ -27,7 +35,7 @@
             new Path().Rectangle({
                 origin:path.origin,
                 size:{w:path.size.w/2,h:path.size.h},
-                monitorType:'mousemove',
+                monitorType:eventName,
                 monitorEvent:evnt
             });
             new Path().Rectangle({
@@ -36,14 +44,14 @@
                     y:path.origin.y
                 },
                 size:{w:path.size.w/2,h:path.size.h},
-                monitorType:'mousemove',
+                monitorType:eventName,
                 monitorEvent:evnt
             });
         }else{
             new Path().Rectangle({
                 origin:path.origin,
                 size:{w:path.size.w,h:path.size.h/2},
-                monitorType:'mousemove',
+                monitorType:eventName,
                 monitorEvent:evnt
             });
             new Path().Rectangle({
@@ -52,17 +60,19 @@
                     y:path.center.y
                 },
                 size:{w:path.size.w,h:path.size.h/2},
-                monitorType:'mousemove',
+                monitorType:eventName,
                 monitorEvent:evnt
             });
         }
         delete Paths[path.key];
     }
+
     function Path(){
         this.origin = {x:0,y:0};
         this.size = {w:10,h:10};
         this.fillColor = 'rgba(255, 255, 255, 0.5)';
     }
+
     Path.prototype = {
         constructor:Path,
         Rectangle:function(config){
@@ -112,6 +122,7 @@
             });
         }
     };
+
     function detector(type){
         var left = canvas.offsetLeft, top = canvas.offsetTop;
         canvas.addEventListener(type, function(event){
@@ -126,6 +137,7 @@
             }
         });
     }
+
     function drawRectangle(path){
         //ctx.moveTo(config.origin.x, config.origin.y);
         ctx.save();
@@ -134,11 +146,21 @@
         ctx.restore();
         return path;
     }
+
     function mergeObject(result, obj){
         for(var i in obj){
             result[i] = obj[i];
         }
         return result;
     }
-    img.onload = mosaic;
+
+    function isPC() {
+        var ua = navigator.userAgent;
+        var ipad = ua.match(/(iPad).*OS\s([\d_]+)/),
+        isIphone =!ipad && ua.match(/(iPhone\sOS)\s([\d_]+)/),
+        isAndroid = ua.match(/(Android)\s+([\d.]+)/),
+        isMobile = isIphone || isAndroid;
+        //判断
+        return isMobile;
+    }
 })(window);
