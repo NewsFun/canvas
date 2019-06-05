@@ -6,7 +6,8 @@
     var canvas = document.querySelector('#dolly2');
     img.src = '../img/beibei.jpg';
 
-    var eventName = isMobile() ? 'touchmove' : 'mousemove';
+    // var eventName = isMobile() ? 'touchmove' : 'mousemove';
+    var eventName = 'touchmove';
     var w = img.width,
         h = img.height,
         ctx = canvas.getContext('2d');
