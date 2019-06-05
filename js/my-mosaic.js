@@ -13,8 +13,6 @@
         canvas.height = h;
         ctx.drawImage(img, 0, 0);
         imgData = ctx.getImageData(0, 0, w, h).data;
-        //console.log(imgData.length);
-        //detector(evnt);
         new Path().Rectangle({
             origin:{x:0, y:0},
             size:{w:w,h:h},
