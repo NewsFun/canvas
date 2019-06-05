@@ -3,7 +3,6 @@
  */
 (function(window){
     var img = new Image();
-    var box = document.querySelector('#box');
     var canvas = document.querySelector('#dolly2');
     img.src = '../img/beibei.jpg';
 
@@ -17,6 +16,7 @@
         type = {};
 
     img.onload = function (){
+        detector(eventName);
         canvas.width = w;
         canvas.height = h;
         ctx.drawImage(img, 0, 0);
@@ -82,7 +82,6 @@
             self.fillColor = this.getCenterColor();
             drawRectangle(self);
             if(self.monitorType) self.monitor();
-
         },
         monitor:function(){
             var self = this;
@@ -90,7 +89,6 @@
             Paths[key] = self;
             if(self.monitorType){
                 if(!type[self.monitorType]){
-                    detector(self.monitorType);
                     type[self.monitorType] = {};
                 }
                 type[self.monitorType][key] = self;
