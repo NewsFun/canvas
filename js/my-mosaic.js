@@ -17,7 +17,6 @@
         type = {};
 
     img.onload = function (){
-        box.width = w;
         canvas.width = w;
         canvas.height = h;
         ctx.drawImage(img, 0, 0);
