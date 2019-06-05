@@ -3,6 +3,7 @@
  */
 (function(window){
     var img = new Image();
+    var box = document.querySelector('#box');
     var canvas = document.querySelector('#dolly2');
     img.src = '../img/beibei.jpg';
 
@@ -16,6 +17,7 @@
         type = {};
 
     img.onload = function (){
+        box.width = w;
         canvas.width = w;
         canvas.height = h;
         ctx.drawImage(img, 0, 0);
