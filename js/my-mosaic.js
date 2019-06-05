@@ -7,7 +7,7 @@
     img.src = '../img/beibei.jpg';
 
     // var eventName = isMobile() ? 'touchmove' : 'mousemove';
-    var eventName = 'touchmove';
+    var eventName = 'mousemove';
     var w = img.width,
         h = img.height,
         ctx = canvas.getContext('2d');
