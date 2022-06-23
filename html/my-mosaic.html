@@ -2,17 +2,35 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>马赛克测试页</title>
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover"> -->
+    <title>猜猜这是谁？</title>
     <link rel="stylesheet" type="text/css" href="../css/default.css">
     <style type="text/css">
-        .thumb {margin-left: 5em;}
+        body,html,.container {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
         .thumb img {max-width: 400px; display: none;}
+        .tips {
+            font-size: 12px;
+            margin-top: 20px;
+            color: white;
+        }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="content bgcolor-8">
-        <div class="thumb"><img src="../img/1.jpg" id="dolly1"/><canvas id="dolly2"></canvas></div>
+<div class="container bgcolor-8">
+    <div class="content">
+        <div id="box" class="thumb">
+            <img src="../img/beibei.jpg" id="dolly1"/>
+            <canvas id="dolly2"></canvas>
+        </div>
+    </div>
+    <div class="tips">
+        <div>如果页面什么都没有，多刷新几次，直到出现一个方框。代码仓促，现在只是没有bug了而已。</div>
+        <div>如果是电脑，滑动鼠标就行了。如果是手机，请点击它……</div>
+        <div>如果你不想把指头点秃，请在电脑上打开，手机端的兼容性不是很好。😀</div>
     </div>
 </div>
 <script src="../js/my-mosaic.js"></script>

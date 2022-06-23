@@ -81,6 +81,7 @@
     function edgeDetection(ant){
         if(_referee(ahead.addr)){
             finish = true;
+            //console.log(n);
             drawEdge();
             return;
         }
