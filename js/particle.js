@@ -1,114 +1,114 @@
 /**
  * Created by bobo on 2015/5/29.
  */
-(function(){
+(function () {
     var canvas = setCanvas();
     var ctx = canvas.getContext('2d');
     ctx.globalCompositeOperation = 'lighter';
 
-    var W = canvas.width, H = canvas.height, txt = ['祝','大','家','节','日','快','乐'];
-    var ba = [], bs = [], page = 0, tl = txt.length, gap = 16, gw = Math.floor(W/gap)*gap, gh = Math.floor(H/gap)*gap;
+    var W = canvas.width, H = canvas.height, txt = ['不', '要', '熬', '夜', '早', '睡', '早', '起', 'mua', '❤️'];
+    var ba = [], bs = [], page = 0, tl = txt.length, gap = 16, gw = Math.floor(W / gap) * gap, gh = Math.floor(H / gap) * gap;
 
     /*--------------------------------------*/
     var Color = {
-        randomColor:function(){
-            return 'rgb('+~~(Math.random()*255)+','+~~(Math.random()*255)+','+~~(Math.random()*255)+')';
+        randomColor: function () {
+            return 'rgb(' + ~~(Math.random() * 255) + ',' + ~~(Math.random() * 255) + ',' + ~~(Math.random() * 255) + ')';
         },
-        setColor:function(r, g, b, a){
-            return 'rgba('+r+','+g+','+b+','+a+')';
+        setColor: function (r, g, b, a) {
+            return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
         }
     };
-    var ball = function(args){
+    var ball = function (args) {
         this.x = args.x;
         this.y = args.y;
         this.z = args.z;
         this.c = args.c;
-        this.vx= args.vx;
-        this.vy= args.vy;
+        this.vx = args.vx;
+        this.vy = args.vy;
     };
-    var dot = function(b){
+    var dot = function (b) {
         this.b = new ball({
-            x : b.x,
-            y : b.y,
-            z : b.z,
-            c : b.c || Color.randomColor(),
-            vx: (Math.random()-0.5)*4,
-            vy: (Math.random()-0.5)*4
+            x: b.x,
+            y: b.y,
+            z: b.z,
+            c: b.c || Color.randomColor(),
+            vx: (Math.random() - 0.5) * 4,
+            vy: (Math.random() - 0.5) * 4
         });
         this.e = 0.07;
         this.s = true;
     };
     dot.prototype = {
-        distance:function (n, details) {
+        distance: function (n, details) {
             var dx = this.b.x - n.x,
                 dy = this.b.y - n.y,
                 d = Math.sqrt(dx * dx + dy * dy);
 
             return details ? [dx, dy, d] : d;
         },
-        bounce:function (self){
+        bounce: function (self) {
             self.x += self.vx;
             self.y += self.vy;
 
-            if(self.x - self.z <= 0){
+            if (self.x - self.z <= 0) {
                 self.vx = -self.vx;
                 self.x = self.z;
             }
-            if(self.x + self.z >= W){
+            if (self.x + self.z >= W) {
                 self.vx = -self.vx;
-                self.x = W-self.z;
+                self.x = W - self.z;
             }
-            if(self.y - self.z <= 0){
+            if (self.y - self.z <= 0) {
                 self.vy = -self.vy;
                 self.y = self.z;
             }
-            if(self.y + self.z >= H){
+            if (self.y + self.z >= H) {
                 self.vy = -self.vy;
-                self.y = H-self.z;
+                self.y = H - self.z;
             }
         },
-        update:function(goal){
+        update: function (goal) {
             var dis = this.distance(goal, true);
             var d = dis[2], dx = dis[0], dy = dis[1];
-            if(this.s){
-                if(d>1){
-                    this.b.x -= dx*this.e;
-                    this.b.y -= dy*this.e;
-                }else{
+            if (this.s) {
+                if (d > 1) {
+                    this.b.x -= dx * this.e;
+                    this.b.y -= dy * this.e;
+                } else {
                     this.b.x -= Math.sin(Math.random() * 3.142);
                     this.b.y -= Math.sin(Math.random() * 3.142);
                 }
-            }else{
+            } else {
                 this.bounce(this.b);
             }
         },
-        moveTo:function(goal){
+        moveTo: function (goal) {
             this.update(goal);
             drawBall(this.b);
         }
     };
-    function drawBall(ball){
+    function drawBall(ball) {
         ctx.fillStyle = ball.c;
         ctx.beginPath();
-        ctx.arc(ball.x, ball.y, ball.z, 0, Math.PI*2, true);
+        ctx.arc(ball.x, ball.y, ball.z, 0, Math.PI * 2, true);
         ctx.fill();
     }
     var P = {
-        setFont:function(l){
+        setFont: function (l) {
             var size = 500;
             var s = Math.min(size,
                 (W / ctx.measureText(l).width) * 0.8 * size,
                 (H / size) * (Fun.isNumber(l) ? 1 : 0.45) * size);
-            ctx.font = 'bold '+Math.floor(s/10)*10+'px Avenir, Helvetica Neue, Helvetica, Arial, sans-serif';
+            ctx.font = 'bold ' + Math.floor(s / 10) * 10 + 'px Avenir, Helvetica Neue, Helvetica, Arial, sans-serif';
         },
-        fillTxt:function(txt){
+        fillTxt: function (txt) {
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillStyle = 'white';
             this.setFont(txt);
-            ctx.fillText(txt, W/2, H/2);
+            ctx.fillText(txt, W / 2, H / 2);
         },
-        sampling:function(){
+        sampling: function () {
             var dots = [],
                 x = 0,
                 y = 0,
@@ -138,68 +138,68 @@
 
             return dots;
         },
-        getTxt:function(n){
+        getTxt: function (n) {
             ctx.clearRect(0, 0, W, H);
             this.fillTxt(txt[n]);
             bs = this.sampling();
         },
-        makeBalls:function(){
-            var balls = [], len = bs.length>0?bs.length:200;
-            for(var i = 0;i<len;i++){
+        makeBalls: function () {
+            var balls = [], len = bs.length > 0 ? bs.length : 200;
+            for (var i = 0; i < len; i++) {
                 balls.push(new dot({
-                    x:Math.random()*W,
-                    y:Math.random()*H,
-                    z:Math.random()*6+4
+                    x: Math.random() * W,
+                    y: Math.random() * H,
+                    z: Math.random() * 6 + 4
                 }))
             }
             return balls;
         }
     };
     var Fun = {
-        towards:function(){
-            for(var i = 0;i<ba.length;i++){
+        towards: function () {
+            for (var i = 0; i < ba.length; i++) {
                 ba[i].moveTo(bs[i]);
             }
         },
-        checkLength:function(){
-            if(ba.length == bs.length) return;
+        checkLength: function () {
+            if (ba.length == bs.length) return;
             var bal = ba.length,
                 bsl = bs.length,
-                len = Math.abs(bal-bsl);
+                len = Math.abs(bal - bsl);
 
-            if(bal>bsl){
-                for(var i = 0;i<len;i++){
+            if (bal > bsl) {
+                for (var i = 0; i < len; i++) {
                     bs.push({
-                        x:Math.random()*W,
-                        y:Math.random()*H
+                        x: Math.random() * W,
+                        y: Math.random() * H
                     });
                 }
-            }else{
-                for(var j = 0;j<len;j++){
+            } else {
+                for (var j = 0; j < len; j++) {
                     ba.push(new dot({
-                        x:Math.random()*W,
-                        y:Math.random()*H,
-                        z:Math.random()*6+4
+                        x: Math.random() * W,
+                        y: Math.random() * H,
+                        z: Math.random() * 6 + 4
                     }))
                 }
             }
         },
-        setState:function(){
+        setState: function () {
             var bal = ba.length,
                 bsl = bs.length,
                 sml = Math.min(bal, bsl);
-            for(var s = 0;s<bal;s++){
-                s<sml ? ba[s].s = true : ba[s].s = false;
+            for (var s = 0; s < bal; s++) {
+                s < sml ? ba[s].s = true : ba[s].s = false;
             }
         },
-        isNumber:function(n){
+        isNumber: function (n) {
             return !isNaN(parseFloat(n)) && isFinite(n);
         }
     };
 
     P.getTxt(page);
     ba = P.makeBalls();
-    var animate = function(){
+    var animate = function () {
         ctx.clearRect(0, 0, W, H);
         Fun.checkLength();
         Fun.towards();
@@ -214,9 +214,9 @@
         if(page>5) clearInterval(tick);
     },3000);
     */
-    canvas.onclick = function(){
-        page ++;
-        P.getTxt(page%tl);
+    canvas.onclick = function () {
+        page++;
+        P.getTxt(page % tl);
         Fun.setState();
     };
 })();
